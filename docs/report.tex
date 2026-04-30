@@ -4,13 +4,15 @@
 \usepackage{pdflscape}
 \usepackage{hyperref}
 \usepackage{tabularx}
-\usepackage{float} % Để cố định vị trí hình ảnh
+\usepackage{float}
 \usepackage[margin=2.5cm]{geometry}
 \usepackage[table,xcdraw]{xcolor}
 \usepackage{enumitem}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 \usepackage{caption}
+\usepackage{amsmath} 
+\usepackage{amssymb} % BẮT BUỘC: Thêm thư viện để dùng \checkmark và \square
 
 % --- THƯ VIỆN ĐỒ HỌA ---
 \usepackage{tikz}
@@ -20,7 +22,7 @@
 \rhead{\small }
 \cfoot{\thepage}
 \renewcommand{\headrulewidth}{1pt}
-\usetikzlibrary{calc} % Thư viện tính toán tọa độ (quan trọng để vẽ khung)
+\usetikzlibrary{calc} 
 
 \usepackage{listings}
 \definecolor{codegreen}{rgb}{0,0.6,0}
@@ -44,44 +46,39 @@
     resetmargins=true,
     tabsize=4,
     escapeinside={(*}{*)},
-    literate={á}{{\'a}}1 {à}{{\`a}}1 {ả}{{\'a}}1 {ã}{{\~a}}1 {ạ}{{\d{a}}}1
-             {ó}{{\'o}}1 {ò}{{\`o}}1 {ỏ}{{\'o}}1 {õ}{{\~o}}1 {ọ}{{\d{o}}}1
-             {é}{{\'e}}1 {è}{{\`e}}1 {ẻ}{{\'e}}1 {ẽ}{{\~e}}1 {ẹ}{{\d{e}}}1
-             {ú}{{\'u}}1 {ù}{{\`u}}1 {ủ}{{\'u}}1 {ũ}{{\~u}}1 {ụ}{{\d{u}}}1
-             {í}{{\'i}}1 {ì}{{\`i}}1 {ỉ}{{\'i}}1 {ĩ}{{\~i}}1 {ị}{{\d{i}}}1
-             {ý}{{\'y}}1 {ỳ}{{\`y}}1 {ỷ}{{\'y}}1 {ỹ}{{\~y}}1 {ỵ}{{\d{y}}}1
+    literate={á}{{\'a}}1 {à}{{\`a}}1 {ả}{{\h{a}}}1 {ã}{{\~a}}1 {ạ}{{\d{a}}}1
+             {ó}{{\'o}}1 {ò}{{\`o}}1 {ỏ}{{\h{o}}}1 {õ}{{\~o}}1 {ọ}{{\d{o}}}1
+             {é}{{\'e}}1 {è}{{\`e}}1 {ẻ}{{\h{e}}}1 {ẽ}{{\~e}}1 {ẹ}{{\d{e}}}1
+             {ú}{{\'u}}1 {ù}{{\`u}}1 {ủ}{{\h{u}}}1 {ũ}{{\~u}}1 {ụ}{{\d{u}}}1
+             {í}{{\'i}}1 {ì}{{\`i}}1 {ỉ}{{\h{i}}}1 {ĩ}{{\~i}}1 {ị}{{\d{i}}}1
+             {ý}{{\'y}}1 {ỳ}{{\`y}}1 {ỷ}{{\h{y}}}1 {ỹ}{{\~y}}1 {ỵ}{{\d{y}}}1
              {đ}{{\d{d}}}1 {Đ}{{\d{D}}}1
-             {â}{{\^a}}1 {ấ}{{\'\^a}}1 {ầ}{{\`\^a}}1 {ẩ}{{\'\^a}}1 {ẫ}{{\~\^a}}1 {ậ}{{\d\^a}}1
-             {ă}{{\u{a}}}1 {ắ}{{\'\u{a}}}1 {ằ}{{\`\u{a}}}1 {ẳ}{{\'\u{a}}}1 {ẵ}{{\~\u{a}}}1 {ặ}{{\d\u{a}}}1
-             {ê}{{\^e}}1 {ế}{{\'\^e}}1 {ề}{{\`\^e}}1 {ể}{{\'\^e}}1 {ễ}{{\~\^e}}1 {ệ}{{\d\^e}}1
-             {ô}{{\^o}}1 {ố}{{\'\^o}}1 {ồ}{{\`\^o}}1 {ổ}{{\'\^o}}1 {ỗ}{{\~\^o}}1 {ộ}{{\d\^o}}1
-             {ơ}{{\h{o}}}1 {ớ}{{\'\h{o}}}1 {ờ}{{\`\h{o}}}1 {ở}{{\'\h{o}}}1 {ỡ}{{\~\h{o}}}1 {ợ}{{\d\h{o}}}1
-             {ư}{{\h{u}}}1 {ứ}{{\'\h{u}}}1 {ừ}{{\`\h{u}}}1 {ử}{{\'\h{u}}}1 {ữ}{{\~\h{u}}}1 {ự}{{\d\h{u}}}1
+             {â}{{\^a}}1 {ấ}{{\'{\^a}}}1 {ầ}{{\`{\^a}}}1 {ẩ}{{\h{\^a}}}1 {ẫ}{{\~{\^a}}}1 {ậ}{{\d{\^a}}}1
+             {ă}{{\u{a}}}1 {ắ}{{\'{\u{a}}}}1 {ằ}{{\`{\u{a}}}}1 {ẳ}{{\h{\u{a}}}}1 {ẵ}{{\~{\u{a}}}}1 {ặ}{{\d{\u{a}}}}1
+             {ê}{{\^e}}1 {ế}{{\'{\^e}}}1 {ề}{{\`{\^e}}}1 {ể}{{\h{\^e}}}1 {ễ}{{\~{\^e}}}1 {ệ}{{\d{\^e}}}1
+             {ô}{{\^o}}1 {ố}{{\'{\^o}}}1 {ồ}{{\`{\^o}}}1 {ổ}{{\h{\^o}}}1 {ỗ}{{\~{\^o}}}1 {ộ}{{\d{\^o}}}1
+             {ơ}{{\ohorn}}1 {ớ}{{\'{\ohorn}}}1 {ờ}{{\`{\ohorn}}}1 {ở}{{\h{\ohorn}}}1 {ỡ}{{\~{\ohorn}}}1 {ợ}{{\d{\ohorn}}}1
+             {ư}{{\uhorn}}1 {ứ}{{\'{\uhorn}}}1 {ừ}{{\`{\uhorn}}}1 {ử}{{\h{\uhorn}}}1 {ữ}{{\~{\uhorn}}}1 {ự}{{\d{\uhorn}}}1
 }
 
-% Định dạng lại tiêu đề chương theo số La Mã cho chuẩn báo cáo
 \renewcommand{\thechapter}{\Roman{chapter}}
 \titleformat{\chapter}[display]
   {\normalfont\huge\bfseries\centering}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
 \titlespacing*{\chapter}{0pt}{-30pt}{20pt}
 
-% --- THÊM TITLE VÀ AUTHOR ĐỂ DÙNG \maketitle ---
 \title{\textbf{Báo cáo hệ thống}\\ Rice Monitoring System}
 \author{Võ Hữu Nghĩa}
 \date{\today}
 
 \begin{document}
 
-% --- TRANG BÌA ĐẶC SẮC ---
 \begin{titlepage}
 \begin{tikzpicture}[overlay,remember picture]
-    % Vẽ khung viền ngoài
     \draw [line width=2pt, color=blue!80!black]
         ($(current page.north west) + (2.5cm,-2cm)$)
         rectangle
         ($(current page.south east) + (-1.5cm,2cm)$);
     
-    % Vẽ khung viền trong (mảnh hơn)
     \draw [line width=0.5pt, color=blue!80!black]
         ($(current page.north west) + (2.6cm,-2.1cm)$)
         rectangle
@@ -89,32 +86,27 @@
 \end{tikzpicture}
 
 \begin{center}
-    % 1. Thông tin Viện/Trường
     {\fontsize{14pt}{16.8pt}\selectfont \textbf{TRƯỜNG ĐẠI HỌC SÀI GÒN}} \\
     {\fontsize{14pt}{16.8pt}\selectfont \textbf{KHOA CÔNG NGHỆ THÔNG TIN}} \\
     \vspace{0.5cm}
     \textbf{--------------------o0o--------------------} \\
     \vspace{1.5cm}
 
-    % 2. Logo 
     \begin{figure}[H]
         \centering
-        \includegraphics[width=4cm]{example-image-a} % Thay bằng file logo SGU của bạn
+        \includegraphics[width=4cm]{example-image-a} 
     \end{figure}
     \vspace{1cm}
 
-    % 3. Loại báo cáo
     {\fontsize{18pt}{21.6pt}\selectfont \textbf{BÁO CÁO DỰ ÁN}} \\
     \vspace{1cm}
 
-    % 4. Tên dự án (Highlight)
     {\color{blue!80!black} \rule{\linewidth}{1.5pt}} \\[0.5cm]
     {\fontsize{24pt}{28.8pt}\selectfont \textbf{RICE MONITORING SYSTEM}} \\[0.2cm]
     {\fontsize{16pt}{19.2pt}\selectfont \textit{Hệ thống giám sát và phân tích dữ liệu lúa thời gian thực}} \\
     {\color{blue!80!black} \rule{\linewidth}{1.5pt}} \\
     \vspace{2cm}
 
-    % 5. Thông tin sinh viên/Giảng viên 
     \begin{flushright}
         \begin{tabular}{ll}
             \fontsize{13pt}{15.6pt}\selectfont \textbf{Sinh viên thực hiện:} & \fontsize{13pt}{15.6pt}\selectfont Võ Hữu Nghĩa \\
@@ -123,62 +115,197 @@
         \end{tabular}
     \end{flushright}
 
-    \vfill % Đẩy phần ngày tháng xuống cuối trang
+    \vfill 
 
-    % 6. Địa điểm và thời gian
     {\fontsize{13pt}{15.6pt}\selectfont \textbf{TP. HỒ CHÍ MINH, THÁNG 04/2026}}
 \end{center}
 \end{titlepage}
-
-% --- HẾT TRANG BÌA ---
 
 \newpage
 \tableofcontents
 \newpage
 
-% Tiếp tục các chương bên dưới...
-\chapter{TẠO DATAFLOW \& QUẢN TRỊ I/O}
-\section{Ảnh vệ tinh là gì?}
+\chapter{KIẾN THỨC NỀN TẢNG — TASK 1.1}
 
-Ảnh vệ tinh là một ma trận 3D gồm 3 chiều: \texttt{[Band, Row, Column]}. Mỗi band là một "kênh" ánh sáng khác nhau. Ví dụ: \texttt{B04} (Red), \texttt{B08} (NIR). Ảnh vệ tinh có tọa độ không gian thực tế. 
+\begin{quote}
+    \textbf{Mục tiêu}: Hiểu đủ sâu để tự viết class đọc ảnh Raster từ \texttt{data/01\_raw/}\\
+    \textbf{File sẽ viết}: \texttt{src/io/raster\_wrapper.py}
+\end{quote}
 
+\noindent\rule{\textwidth}{0.4pt}
+
+\section{PHẦN 1 — ẢNH VỆ TINH LÀ GÌ? (Raster Data)}
+
+\subsection{1.1 Raster vs Vector}
 Trong GIS (Hệ thống thông tin địa lý) có 2 kiểu dữ liệu chính:
 \begin{itemize}
-    \item \textbf{Vector}: Lưu trữ theo dạng điểm (Point), đường (Line), và vùng (Polygon).
-    \item \textbf{Raster}: Lưu trữ theo dạng lưới ô vuông (Grid), mỗi ô pixel mang một giá trị số.
+    \item \textbf{Vector}: Lưu theo dạng điểm, đường, vùng (polygon). Ví dụ: ranh giới tỉnh thành.
+    \item \textbf{Raster}: Lưu dưới dạng \textbf{lưới ô vuông (Grid)}, mỗi ô là một pixel có giá trị số. $\rightarrow$ Ảnh vệ tinh là Raster.
 \end{itemize}
 
-$\rightarrow$ Ảnh vệ tinh là dữ liệu \textbf{Raster}.
+\subsection{1.2 Cấu trúc dữ liệu của một ảnh Raster trong bộ nhớ}
+Hãy hình dung ảnh Raster là một \textbf{mảng 3 chiều (3D Array)}:
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.9\textwidth]{"./img/Screenshot 2026-04-30 113352.png"} 
-\caption{Cấu trúc ảnh vệ tinh}
-\label{fig:raster}
-\end{figure}
-
-\section{Cấu trúc dữ liệu của một ảnh Raster trong bộ nhớ}
-
-Trong bộ nhớ, ảnh Raster được biểu diễn dưới dạng một mảng 3 chiều (3D Array) với cấu trúc: \texttt{[Band, Row, Column]}. 
-
-Ví dụ kích thước thực tế của ảnh Sentinel-2:
-\begin{center}
-    \texttt{[4, 10980, 10980]} \\
-    \textbf{Band} \hspace{0.3cm} \textbf{Row} \hspace{0.3cm} \textbf{Column}
-\end{center}
+\begin{lstlisting}[language=bash, numbers=none]
+[Band(dải), Row(hàng), Column(cột)]  <-  NumPy shape
+   4         10980       10980    <-  kích thước thực Sentinel-2
+\end{lstlisting}
 
 \begin{itemize}
-    \item \textbf{Band (Băng tần)}: Mỗi band là một "kênh" ánh sáng khác nhau (Đỏ, Xanh, Hồng ngoại...).
-    \item \textbf{Row x Column}: Chiều cao x Chiều rộng ảnh tính bằng số pixel.
+    \item \textbf{Band (Băng tần)}: Mỗi band là 1 "kênh" ánh sáng khác nhau (Đỏ, Xanh, Hồng ngoại...).
+    \item \textbf{Row $\times$ Column}: Chiều cao $\times$ Chiều rộng ảnh tính bằng số pixel.
     \item \textbf{Giá trị mỗi pixel}: Là số nguyên \textbf{uint16} (0 $\rightarrow$ 65535), biểu diễn cường độ phản xạ ánh sáng.
 \end{itemize}
 
-\textbf{Lưu ý quan trọng (Các chiều này có thể thay đổi, cần phân biệt rõ cách lưu trữ):}
+\subsection{1.3 Sentinel-2 — Band nào dùng để tính NDVI?}
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|l|}
+\hline
+\textbf{Band} & \textbf{Tên} & \textbf{Bước sóng} & \textbf{Độ phân giải} & \textbf{Dùng để} \\
+\hline
+B04 & RED & 665 nm & 10m/px & Ánh sáng đỏ cây hấp thụ \\
+B08 & NIR & 842 nm & 10m/px & Hồng ngoại cây phản xạ \\
+\hline
+\end{tabular}
+\end{table}
+$\rightarrow$ \textbf{Chỉ cần 2 band: B04 và B08} để tính NDVI.
 
+\subsection{1.4 Định dạng file}
 \begin{itemize}
-    \item \textbf{Kiểu dữ liệu (Dtype - uint16):} Tại sao lại là \texttt{uint16} mà không phải là \texttt{uint8} (như ảnh JPG thông thường)? Vì cảm biến vệ tinh Sentinel-2 có độ nhạy bức xạ (Radiometric resolution) cao, ghi nhận cường độ ánh sáng trong khoảng 0 đến 65535.
-    \item \textbf{Quản lý bộ nhớ:} Một pixel \texttt{uint16} chiếm 2 byte. Nếu chuyển đổi (cast) qua \texttt{float32} để tính toán chỉ số NDVI, kích thước bộ nhớ sẽ tăng gấp đôi (4 bytes/pixel), gây áp lực lớn lên RAM với ảnh độ phân giải cao.
-    \item \textbf{Bố cục bộ nhớ (Memory Layout):} Rasterio và Numpy mặc định sử dụng \textit{row-major order} (C-contiguous). Nghĩa là các phần tử của mảng được lưu trữ liên tiếp theo thứ tự hàng trước, cột sau. Với mảng vệ tinh kích thước lớn, việc lặp qua dữ liệu theo chiều dọc (column-wise) sẽ bẻ gãy tính cục bộ không gian (spatial locality) của cache CPU, gây ra hiện tượng \textbf{cache miss} liên tục và làm giảm hiệu suất xử lý đáng kể.
+    \item \textbf{GeoTIFF (\texttt{.tif})}: Định dạng phổ biến nhất, chứa cả dữ liệu pixel lẫn thông tin địa lý (CRS, Transform).
+    \item \textbf{JPEG2000 (\texttt{.jp2})}: Định dạng nén Sentinel-2 gốc tải về từ Copernicus Hub.
 \end{itemize}
 
+\noindent\rule{\textwidth}{0.4pt}
+
+\section{PHẦN 2 — THÔNG TIN ĐỊA LÝ ĐÍNH KÈM (Geospatial Metadata)}
+
+Điều khác biệt lớn nhất của ảnh vệ tinh so với ảnh chụp thông thường là nó có \textbf{tọa độ thực địa} gắn liền. Khi mở file, bạn không chỉ đọc pixel mà còn cần đọc 2 thứ quan trọng:
+
+\subsection{2.1 CRS — Hệ tọa độ tham chiếu (Coordinate Reference System)}
+\begin{itemize}
+    \item Mô tả cách \textbf{"chiếu"} bề mặt cầu Trái Đất lên mặt phẳng 2D.
+    \item Sentinel-2 thường dùng \textbf{EPSG:32648} (UTM Zone 48N) cho khu vực Việt Nam.
+    \item Được biểu diễn bằng chuỗi \textbf{WKT} hoặc mã \textbf{EPSG}.
+\end{itemize}
+
+\begin{quote}
+    Ví dụ: \texttt{"EPSG:32648"} $\rightarrow$ UTM Zone 48N $\rightarrow$ Phù hợp Đồng bằng sông Cửu Long.
+\end{quote}
+
+\subsection{2.2 Affine Transform Matrix — Ma trận biến đổi}
+Đây là \textbf{ma trận 3x3} ánh xạ từ \textbf{tọa độ pixel (col, row)} sang \textbf{tọa độ thực địa (longitude, latitude)}.
+
+\begin{equation*}
+    \begin{pmatrix}
+    x_{\text{real}}\\
+    y_{\text{real}}\\
+    1
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+    a  &  b  &  c \\
+    d  &  e  &  f \\
+    0  &  0  &  1
+    \end{pmatrix}
+    \begin{pmatrix}
+    col \\
+    row \\
+    1
+    \end{pmatrix}
+\end{equation*}
+
+Trong đó:
+\begin{itemize}
+    \item \textbf{(c, f)}: Tọa độ thực địa của góc trên-trái của ảnh (origin).
+    \item \textbf{a}: Kích thước pixel theo chiều X (thường = +10.0 mét với Sentinel-2 10m).
+    \item \textbf{e}: Kích thước pixel theo chiều Y (thường = \textbf{-10.0} vì trục Y đảo ngược: hàng 0 ở \textbf{trên}).
+    \item \textbf{b, d}: Thường = 0 nếu ảnh không bị xoay.
+\end{itemize}
+
+\textbf{Tại sao cần matrix này?} Để sau khi tính NDVI xong, có thể ghi kết quả ra file mới mà vẫn giữ nguyên tọa độ thực địa.
+
+\noindent\rule{\textwidth}{0.4pt}
+
+\section{PHẦN 3 — THƯ VIỆN (\texttt{rasterio}) — CẦU NỐI PYTHON \(\leftrightarrow\) FILE ẢNH}
+
+\subsection{3.1 Rasterio là gì?}
+\texttt{rasterio} là thư viện Python wrapper của \textbf{GDAL} (Geospatial Data Abstraction Library - viết bằng C++). Nó giúp Python đọc/ghi các định dạng GeoTIFF, JP2, HDF5... mà không cần tự parse binary file.
+
+\subsection{3.2 Khái niệm cốt lõi: Dataset Object}
+Khi mở file với \texttt{rasterio}, nhận về một \textbf{Dataset Object} — tương tự như \texttt{file handle} khi dùng \texttt{open()} thông thường.
+
+\begin{lstlisting}[language=python]
+dataset = rasterio.open("data/01_raw/T48PXS_B04.jp2")
+
+# Metadata
+dataset.count      # Band number (usually = 1 for jp2)
+dataset.width      # Column number (pixel)
+dataset.height     # Row number (pixel)
+dataset.dtypes     # Data type ('uint16',)
+dataset.crs        # Coordinate Reference System
+dataset.transform  # Affine Transform Matrix
+
+data = dataset.read(1)  # shape: (height, width)
+
+dataset.close()
+\end{lstlisting}
+
+\begin{quote}
+    \textbf{Vấn đề}: \texttt{dataset.read(1)} nạp \textbf{toàn bộ} ảnh vào RAM. Với ảnh 10980x10980 uint16, đây là lý do ta sẽ học Chunking sau này .
+\end{quote}
+
+\subsection{3.3 Context Manager — Pattern chuẩn}
+Sử dụng \texttt{with} để đảm bảo file luôn được đóng đúng cách:
+
+\begin{lstlisting}[language=python]
+with rasterio.open("path/to/file.tif") as dataset:
+    meta = dataset.meta      # read metadata
+    data = dataset.read(1)   # read band 1
+# dataset handle .close() is here
+\end{lstlisting}
+
+\noindent\rule{\textwidth}{0.4pt}
+
+\section{PHẦN 4 — QUẢN LÝ BỘ NHỚ CƠ BẢN}
+
+\subsection{5.1 Tính toán RAM tiêu thụ}
+\begin{lstlisting}[language=bash, numbers=none]
+1 pixel Sentinel-2  = uint16 = 2 bytes
+1 band B04          = 10980 * 10980 * 2 bytes
+                    = 241,120,800 bytes
+                    ~ 230 MB (cho 1 band)
+
+Cả 4 band (B02,B03,B04,B08) = ~920 MB
+\end{lstlisting}
+
+\subsection{5.2 Lazy Loading \& 5.3 File Handle}
+\texttt{rasterio.open()} không đọc pixel ngay. Dữ liệu chỉ nạp vào RAM khi gọi \texttt{.read()}. File handle là tài nguyên OS, nếu mở quá nhiều file mà không đóng sẽ dẫn đến lỗi tràn bộ mô tả tệp (Too many open files).
+
+\noindent\rule{\textwidth}{0.4pt}
+
+\section*{GHI NHỚ CỐT LÕI}
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Khái niệm} & \textbf{Bản chất} \\
+\hline
+Raster Image & Mảng 3D số nguyên \texttt{[Band, H, W]} lưu cường độ bức xạ. \\
+\hline
+Band & 1 kênh ảnh = 1 mảng 2D. Sentinel-2 có 13 bands. \\
+\hline
+CRS & "Ngôn ngữ tọa độ" — ánh xạ pixel ra kinh độ/vĩ độ. \\
+\hline
+Affine Transform & Ma trận 3x3 chuyển đổi \texttt{(col, row)} $\rightarrow$ \texttt{(x\_real, y\_real)}. \\
+\hline
+\texttt{rasterio.open()} & Mở file handle + đọc header, CHƯA nạp pixel vào RAM. \\
+\hline
+\texttt{with} block & Đảm bảo file tự động đóng, tránh rò rỉ bộ nhớ. \\
+\hline
+uint16 & Kiểu số nguyên 16-bit (0 $\rightarrow$ 65535), 1 pixel = 2 bytes. \\
+\hline
+\end{tabularx}
+\end{table}
 \end{document}
