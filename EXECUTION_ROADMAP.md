@@ -7,7 +7,7 @@
 ---
 
 ## 🗂️ GIAI ĐOẠN 1: TẠO DATAFLOW & QUẢN TRỊ I/O (File: `src/io/raster_wrapper.py`)
-- [ ] **Task 1.1:** Khởi tạo class đọc ảnh raster (JP2 hoặc TIFF) từ thư mục `data/01_raw`.
+- [ ] **Task 1.1:** Khởi tạo class đọc ảnh raster (JP2 hoặc TIFF) từ thư mục `data/01_raw`.(Data Ingestion - Thu nạp dữ liệu)
 - [ ] **Task 1.2:** Viết hàm trích xuất Metadata (Hệ tọa độ CRS, Transform matrix, kích thước ảnh gốc).
 - [ ] **Task 1.3:** Viết hàm nạp dữ liệu rải rác (Chunking/Windowed Reading) thay vì nạp toàn bộ ảnh vào RAM. Cần đọc theo Block 256x256 hoặc 512x512 để tránh tràn RAM (OOM - Out Of Memory).
 

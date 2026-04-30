@@ -222,8 +222,8 @@ Truy cập: **https://browser.dataspace.copernicus.eu/**
 
 - [x] Tôi hiểu ảnh raster là mảng 3D `[Band, Row, Col]`.
 - [ ] Tôi biết Sentinel-2 lưu định dạng JP2, mỗi file là 1 band.
-- [ ] Tôi biết `rasterio.open()` chưa đọc pixel ngay.
-- [ ] Tôi hiểu `dataset.transform` là ma trận Affine.
+- [x] Tôi biết `rasterio.open()` chưa đọc pixel ngay.
+- [x] Tôi hiểu `dataset.transform` là ma trận Affine.
 - [ ] Tôi biết viết class Python với `__init__`, `self`, và các method.
 - [ ] Tôi đã tính được: 1 band Sentinel-2 ≈ 115MB RAM.
 - [x] Tôi biết phải `close()` file sau khi dùng xong (hoặc dùng `with`).

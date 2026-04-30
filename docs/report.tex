@@ -1,0 +1,184 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{vietnam}
+\usepackage{graphicx}
+\usepackage{pdflscape}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{float} % Để cố định vị trí hình ảnh
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{caption}
+
+% --- THƯ VIỆN ĐỒ HỌA ---
+\usepackage{tikz}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small \textbf{Report - Rice Monitoring System}}
+\rhead{\small }
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{1pt}
+\usetikzlibrary{calc} % Thư viện tính toán tọa độ (quan trọng để vẽ khung)
+
+\usepackage{listings}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstset{
+    language=bash,
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{black},
+    framesep=5pt,
+    xleftmargin=0cm,
+    resetmargins=true,
+    tabsize=4,
+    escapeinside={(*}{*)},
+    literate={á}{{\'a}}1 {à}{{\`a}}1 {ả}{{\'a}}1 {ã}{{\~a}}1 {ạ}{{\d{a}}}1
+             {ó}{{\'o}}1 {ò}{{\`o}}1 {ỏ}{{\'o}}1 {õ}{{\~o}}1 {ọ}{{\d{o}}}1
+             {é}{{\'e}}1 {è}{{\`e}}1 {ẻ}{{\'e}}1 {ẽ}{{\~e}}1 {ẹ}{{\d{e}}}1
+             {ú}{{\'u}}1 {ù}{{\`u}}1 {ủ}{{\'u}}1 {ũ}{{\~u}}1 {ụ}{{\d{u}}}1
+             {í}{{\'i}}1 {ì}{{\`i}}1 {ỉ}{{\'i}}1 {ĩ}{{\~i}}1 {ị}{{\d{i}}}1
+             {ý}{{\'y}}1 {ỳ}{{\`y}}1 {ỷ}{{\'y}}1 {ỹ}{{\~y}}1 {ỵ}{{\d{y}}}1
+             {đ}{{\d{d}}}1 {Đ}{{\d{D}}}1
+             {â}{{\^a}}1 {ấ}{{\'\^a}}1 {ầ}{{\`\^a}}1 {ẩ}{{\'\^a}}1 {ẫ}{{\~\^a}}1 {ậ}{{\d\^a}}1
+             {ă}{{\u{a}}}1 {ắ}{{\'\u{a}}}1 {ằ}{{\`\u{a}}}1 {ẳ}{{\'\u{a}}}1 {ẵ}{{\~\u{a}}}1 {ặ}{{\d\u{a}}}1
+             {ê}{{\^e}}1 {ế}{{\'\^e}}1 {ề}{{\`\^e}}1 {ể}{{\'\^e}}1 {ễ}{{\~\^e}}1 {ệ}{{\d\^e}}1
+             {ô}{{\^o}}1 {ố}{{\'\^o}}1 {ồ}{{\`\^o}}1 {ổ}{{\'\^o}}1 {ỗ}{{\~\^o}}1 {ộ}{{\d\^o}}1
+             {ơ}{{\h{o}}}1 {ớ}{{\'\h{o}}}1 {ờ}{{\`\h{o}}}1 {ở}{{\'\h{o}}}1 {ỡ}{{\~\h{o}}}1 {ợ}{{\d\h{o}}}1
+             {ư}{{\h{u}}}1 {ứ}{{\'\h{u}}}1 {ừ}{{\`\h{u}}}1 {ử}{{\'\h{u}}}1 {ữ}{{\~\h{u}}}1 {ự}{{\d\h{u}}}1
+}
+
+% Định dạng lại tiêu đề chương theo số La Mã cho chuẩn báo cáo
+\renewcommand{\thechapter}{\Roman{chapter}}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\centering}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-30pt}{20pt}
+
+% --- THÊM TITLE VÀ AUTHOR ĐỂ DÙNG \maketitle ---
+\title{\textbf{Báo cáo hệ thống}\\ Rice Monitoring System}
+\author{Võ Hữu Nghĩa}
+\date{\today}
+
+\begin{document}
+
+% --- TRANG BÌA ĐẶC SẮC ---
+\begin{titlepage}
+\begin{tikzpicture}[overlay,remember picture]
+    % Vẽ khung viền ngoài
+    \draw [line width=2pt, color=blue!80!black]
+        ($(current page.north west) + (2.5cm,-2cm)$)
+        rectangle
+        ($(current page.south east) + (-1.5cm,2cm)$);
+    
+    % Vẽ khung viền trong (mảnh hơn)
+    \draw [line width=0.5pt, color=blue!80!black]
+        ($(current page.north west) + (2.6cm,-2.1cm)$)
+        rectangle
+        ($(current page.south east) + (-1.6cm,2.1cm)$);
+\end{tikzpicture}
+
+\begin{center}
+    % 1. Thông tin Viện/Trường
+    {\fontsize{14pt}{16.8pt}\selectfont \textbf{TRƯỜNG ĐẠI HỌC SÀI GÒN}} \\
+    {\fontsize{14pt}{16.8pt}\selectfont \textbf{KHOA CÔNG NGHỆ THÔNG TIN}} \\
+    \vspace{0.5cm}
+    \textbf{--------------------o0o--------------------} \\
+    \vspace{1.5cm}
+
+    % 2. Logo 
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=4cm]{example-image-a} % Thay bằng file logo SGU của bạn
+    \end{figure}
+    \vspace{1cm}
+
+    % 3. Loại báo cáo
+    {\fontsize{18pt}{21.6pt}\selectfont \textbf{BÁO CÁO DỰ ÁN}} \\
+    \vspace{1cm}
+
+    % 4. Tên dự án (Highlight)
+    {\color{blue!80!black} \rule{\linewidth}{1.5pt}} \\[0.5cm]
+    {\fontsize{24pt}{28.8pt}\selectfont \textbf{RICE MONITORING SYSTEM}} \\[0.2cm]
+    {\fontsize{16pt}{19.2pt}\selectfont \textit{Hệ thống giám sát và phân tích dữ liệu lúa thời gian thực}} \\
+    {\color{blue!80!black} \rule{\linewidth}{1.5pt}} \\
+    \vspace{2cm}
+
+    % 5. Thông tin sinh viên/Giảng viên 
+    \begin{flushright}
+        \begin{tabular}{ll}
+            \fontsize{13pt}{15.6pt}\selectfont \textbf{Sinh viên thực hiện:} & \fontsize{13pt}{15.6pt}\selectfont Võ Hữu Nghĩa \\
+            \fontsize{13pt}{15.6pt}\selectfont \textbf{Mã số sinh viên:} & \fontsize{13pt}{15.6pt}\selectfont \textit{3124410231} \\
+            \fontsize{13pt}{15.6pt}\selectfont \textbf{Chuyên ngành:} & \fontsize{13pt}{15.6pt}\selectfont Khoa học Máy tính \\
+        \end{tabular}
+    \end{flushright}
+
+    \vfill % Đẩy phần ngày tháng xuống cuối trang
+
+    % 6. Địa điểm và thời gian
+    {\fontsize{13pt}{15.6pt}\selectfont \textbf{TP. HỒ CHÍ MINH, THÁNG 04/2026}}
+\end{center}
+\end{titlepage}
+
+% --- HẾT TRANG BÌA ---
+
+\newpage
+\tableofcontents
+\newpage
+
+% Tiếp tục các chương bên dưới...
+\chapter{TẠO DATAFLOW \& QUẢN TRỊ I/O}
+\section{Ảnh vệ tinh là gì?}
+
+Ảnh vệ tinh là một ma trận 3D gồm 3 chiều: \texttt{[Band, Row, Column]}. Mỗi band là một "kênh" ánh sáng khác nhau. Ví dụ: \texttt{B04} (Red), \texttt{B08} (NIR). Ảnh vệ tinh có tọa độ không gian thực tế. 
+
+Trong GIS (Hệ thống thông tin địa lý) có 2 kiểu dữ liệu chính:
+\begin{itemize}
+    \item \textbf{Vector}: Lưu trữ theo dạng điểm (Point), đường (Line), và vùng (Polygon).
+    \item \textbf{Raster}: Lưu trữ theo dạng lưới ô vuông (Grid), mỗi ô pixel mang một giá trị số.
+\end{itemize}
+
+$\rightarrow$ Ảnh vệ tinh là dữ liệu \textbf{Raster}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{"./img/Screenshot 2026-04-30 113352.png"} 
+\caption{Cấu trúc ảnh vệ tinh}
+\label{fig:raster}
+\end{figure}
+
+\section{Cấu trúc dữ liệu của một ảnh Raster trong bộ nhớ}
+
+Trong bộ nhớ, ảnh Raster được biểu diễn dưới dạng một mảng 3 chiều (3D Array) với cấu trúc: \texttt{[Band, Row, Column]}. 
+
+Ví dụ kích thước thực tế của ảnh Sentinel-2:
+\begin{center}
+    \texttt{[4, 10980, 10980]} \\
+    \textbf{Band} \hspace{0.3cm} \textbf{Row} \hspace{0.3cm} \textbf{Column}
+\end{center}
+
+\begin{itemize}
+    \item \textbf{Band (Băng tần)}: Mỗi band là một "kênh" ánh sáng khác nhau (Đỏ, Xanh, Hồng ngoại...).
+    \item \textbf{Row x Column}: Chiều cao x Chiều rộng ảnh tính bằng số pixel.
+    \item \textbf{Giá trị mỗi pixel}: Là số nguyên \textbf{uint16} (0 $\rightarrow$ 65535), biểu diễn cường độ phản xạ ánh sáng.
+\end{itemize}
+
+\textbf{Lưu ý quan trọng (Các chiều này có thể thay đổi, cần phân biệt rõ cách lưu trữ):}
+
+\begin{itemize}
+    \item \textbf{Kiểu dữ liệu (Dtype - uint16):} Tại sao lại là \texttt{uint16} mà không phải là \texttt{uint8} (như ảnh JPG thông thường)? Vì cảm biến vệ tinh Sentinel-2 có độ nhạy bức xạ (Radiometric resolution) cao, ghi nhận cường độ ánh sáng trong khoảng 0 đến 65535.
+    \item \textbf{Quản lý bộ nhớ:} Một pixel \texttt{uint16} chiếm 2 byte. Nếu chuyển đổi (cast) qua \texttt{float32} để tính toán chỉ số NDVI, kích thước bộ nhớ sẽ tăng gấp đôi (4 bytes/pixel), gây áp lực lớn lên RAM với ảnh độ phân giải cao.
+    \item \textbf{Bố cục bộ nhớ (Memory Layout):} Rasterio và Numpy mặc định sử dụng \textit{row-major order} (C-contiguous). Nghĩa là các phần tử của mảng được lưu trữ liên tiếp theo thứ tự hàng trước, cột sau. Với mảng vệ tinh kích thước lớn, việc lặp qua dữ liệu theo chiều dọc (column-wise) sẽ bẻ gãy tính cục bộ không gian (spatial locality) của cache CPU, gây ra hiện tượng \textbf{cache miss} liên tục và làm giảm hiệu suất xử lý đáng kể.
+\end{itemize}
+
+\end{document}
