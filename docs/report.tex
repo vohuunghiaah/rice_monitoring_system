@@ -12,18 +12,21 @@
 \usepackage{titlesec}
 \usepackage{caption}
 \usepackage{amsmath} 
-\usepackage{amssymb} % BẮT BUỘC: Thêm thư viện để dùng \checkmark và \square
+\usepackage{amssymb} 
 
 % --- THƯ VIỆN ĐỒ HỌA ---
 \usepackage{tikz}
+\usetikzlibrary{calc} 
+
+% --- CẤU HÌNH HEADER/FOOTER ---
 \pagestyle{fancy}
 \fancyhf{}
 \lhead{\small \textbf{Report - Rice Monitoring System}}
 \rhead{\small }
 \cfoot{\thepage}
 \renewcommand{\headrulewidth}{1pt}
-\usetikzlibrary{calc} 
 
+% --- CẤU HÌNH LISTINGS (Đã fix lỗi tiếng Việt) ---
 \usepackage{listings}
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -46,6 +49,7 @@
     resetmargins=true,
     tabsize=4,
     escapeinside={(*}{*)},
+    extendedchars=true,
     literate={á}{{\'a}}1 {à}{{\`a}}1 {ả}{{\h{a}}}1 {ã}{{\~a}}1 {ạ}{{\d{a}}}1
              {ó}{{\'o}}1 {ò}{{\`o}}1 {ỏ}{{\h{o}}}1 {õ}{{\~o}}1 {ọ}{{\d{o}}}1
              {é}{{\'e}}1 {è}{{\`e}}1 {ẻ}{{\h{e}}}1 {ẽ}{{\~e}}1 {ẹ}{{\d{e}}}1
@@ -61,14 +65,11 @@
              {ư}{{\uhorn}}1 {ứ}{{\'{\uhorn}}}1 {ừ}{{\`{\uhorn}}}1 {ử}{{\h{\uhorn}}}1 {ữ}{{\~{\uhorn}}}1 {ự}{{\d{\uhorn}}}1
 }
 
+% --- FORMAT CHAPTER ---
 \renewcommand{\thechapter}{\Roman{chapter}}
 \titleformat{\chapter}[display]
   {\normalfont\huge\bfseries\centering}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
 \titlespacing*{\chapter}{0pt}{-30pt}{20pt}
-
-\title{\textbf{Báo cáo hệ thống}\\ Rice Monitoring System}
-\author{Võ Hữu Nghĩa}
-\date{\today}
 
 \begin{document}
 
@@ -94,7 +95,7 @@
 
     \begin{figure}[H]
         \centering
-        \includegraphics[width=4cm]{example-image-a} 
+        % \includegraphics[width=4cm]{example-image-a} % Thay bằng logo trường khi có file ảnh
     \end{figure}
     \vspace{1cm}
 
@@ -255,6 +256,9 @@ dataset.close()
 \begin{quote}
     \textbf{Vấn đề}: \texttt{dataset.read(1)} nạp \textbf{toàn bộ} ảnh vào RAM. Với ảnh 10980x10980 uint16, đây là lý do ta sẽ học Chunking sau này .
 \end{quote}
+Ma trận Transform (Affine): Là thuật toán chuyển đổi chỉ mục phần tử (cột, hàng) của mảng bộ nhớ (NumPy) thành tọa độ phẳng (X, Y) trên không gian bản đồ (thường tính bằng mét).
+
+Hệ tọa độ tham chiếu (CRS): Là hệ thống định nghĩa mặt phẳng bản đồ đó, đồng thời chứa các phương trình toán học để biến đổi qua lại giữa tọa độ phẳng (X, Y) và tọa độ không gian mặt cầu (Kinh độ, Vĩ độ).
 
 \subsection{3.3 Context Manager — Pattern chuẩn}
 Sử dụng \texttt{with} để đảm bảo file luôn được đóng đúng cách:
@@ -270,7 +274,7 @@ with rasterio.open("path/to/file.tif") as dataset:
 
 \section{PHẦN 4 — QUẢN LÝ BỘ NHỚ CƠ BẢN}
 
-\subsection{5.1 Tính toán RAM tiêu thụ}
+\subsection{4.1 Tính toán RAM tiêu thụ}
 \begin{lstlisting}[language=bash, numbers=none]
 1 pixel Sentinel-2  = uint16 = 2 bytes
 1 band B04          = 10980 * 10980 * 2 bytes
@@ -280,7 +284,7 @@ with rasterio.open("path/to/file.tif") as dataset:
 Cả 4 band (B02,B03,B04,B08) = ~920 MB
 \end{lstlisting}
 
-\subsection{5.2 Lazy Loading \& 5.3 File Handle}
+\subsection{4.2 Lazy Loading \& 4.3 File Handle}
 \texttt{rasterio.open()} không đọc pixel ngay. Dữ liệu chỉ nạp vào RAM khi gọi \texttt{.read()}. File handle là tài nguyên OS, nếu mở quá nhiều file mà không đóng sẽ dẫn đến lỗi tràn bộ mô tả tệp (Too many open files).
 
 \noindent\rule{\textwidth}{0.4pt}
