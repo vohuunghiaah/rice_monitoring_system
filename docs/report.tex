@@ -196,7 +196,7 @@ $\rightarrow$ \textbf{Chỉ cần 2 band: B04 và B08} để tính NDVI.
 \end{quote}
 
 \subsection{2.2 Affine Transform Matrix — Ma trận biến đổi}
-Đây là \textbf{ma trận 3x3} ánh xạ từ \textbf{tọa độ pixel (col, row)} sang \textbf{tọa độ thực địa (longitude, latitude)}.
+Đây là ma trận 3x3 ánh xạ từ tọa độ pixel (col, row) sang \textbf{tọa độ phẳng (Planar Coordinates - X, Y)}. Để chuyển tiếp từ không gian phẳng này sang \textbf{tọa độ địa lý mặt cầu (Kinh độ, Vĩ độ)}, dữ liệu cần được đưa qua các phương trình biến đổi của hệ quy chiếu (CRS).
 
 \begin{equation*}
     \begin{pmatrix}
@@ -256,9 +256,12 @@ dataset.close()
 \begin{quote}
     \textbf{Vấn đề}: \texttt{dataset.read(1)} nạp \textbf{toàn bộ} ảnh vào RAM. Với ảnh 10980x10980 uint16, đây là lý do ta sẽ học Chunking sau này .
 \end{quote}
-Ma trận Transform (Affine): Là thuật toán chuyển đổi chỉ mục phần tử (cột, hàng) của mảng bộ nhớ (NumPy) thành tọa độ phẳng (X, Y) trên không gian bản đồ (thường tính bằng mét).
+\begin{quote}
+    \textbf{Ma trận Transform (Affine):} Thuật toán chuyển đổi chỉ mục phần tử (cột, hàng) của mảng bộ nhớ (NumPy) thành tọa độ phẳng (X, Y) trên không gian bản đồ (thường tính bằng mét).
 
-Hệ tọa độ tham chiếu (CRS): Là hệ thống định nghĩa mặt phẳng bản đồ đó, đồng thời chứa các phương trình toán học để biến đổi qua lại giữa tọa độ phẳng (X, Y) và tọa độ không gian mặt cầu (Kinh độ, Vĩ độ).
+    \medskip
+    \textbf{Hệ tọa độ tham chiếu (CRS):} Hệ thống định nghĩa mặt phẳng bản đồ, đồng thời chứa các phương trình toán học để biến đổi qua lại giữa tọa độ phẳng (X, Y) và tọa độ địa lý mặt cầu (Kinh độ, Vĩ độ).
+\end{quote}
 
 \subsection{3.3 Context Manager — Pattern chuẩn}
 Sử dụng \texttt{with} để đảm bảo file luôn được đóng đúng cách:
