@@ -43,3 +43,8 @@ class RasterWrapper:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.close()
 
+    def get_pixel_size(self) -> tuple:
+        return abs(self.transform.a), abs(self.transform.e)
+    
+    def get_bounds()
+

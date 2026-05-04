@@ -32,5 +32,10 @@ def main():
         
         print("\n" + "="*60)
 
+
+        a, e = band4.get_pixel_size()
+        print(a)
+        print(e)
+
 if __name__ == "__main__":
     main()
