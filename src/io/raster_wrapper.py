@@ -43,8 +43,38 @@ class RasterWrapper:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.close()
 
+    def affine_transform_matrix(self, row, col):
+        t = self.transform
+        x = t.a*col + t.b*row + t.c
+        y = t.d*col + t.e*row + t.f
+        return x, y
+
     def get_pixel_size(self) -> tuple:
         return abs(self.transform.a), abs(self.transform.e)
-    
-    def get_bounds()
+
+    def get_bounds(self) -> dict:
+        if self.transform.b == 0 & self.transform.f == 0:
+            return {"left": self.transform.c, 
+                    "right": self.transform.c + (self.width*self.transform.a), 
+                    "top": self.transform.f, 
+                    "bottom": self.transform.f + (self.height*self.transform.e)}
+        corner = [self.affine_trasform_matrix(0, 0), 
+                self.affine_transform_matrix(0, self.height), 
+                self.affine_transform_matrix(self.width, 0), 
+                self.affine_transform_matrix(self.width, self.height)]
+        x = [c[0] for c in corner]
+        y = [c[1] for c in corner]
+        bounds = {
+            "left": min(x),
+            "right": max(x),
+            "top": max(y),
+            "bottom": min(y)
+        }
+        return bounds
+    def pixel_to_coords(self, row: int, col: int) -> tuple:
+        if self.transform.b == 0 & self.transform.f == 0:
+            return (self.transform.a*col + self.transform.c,
+                    self.transform.e*row + self.transform.f)
+        return (self.affine_transform_matrix(row, col))
+
 
