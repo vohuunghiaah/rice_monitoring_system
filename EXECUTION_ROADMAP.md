@@ -8,7 +8,7 @@
 
 ## 🗂️ GIAI ĐOẠN 1: TẠO DATAFLOW & QUẢN TRỊ I/O (File: `src/io/raster_wrapper.py`)
 - [x] **Task 1.1:** ✅ HOÀN THÀNH — Class `RasterWrapper` đọc ảnh raster từ `data/01_raw/` (có `get_metadata()`, `read_band()`, `close()`, context manager `__enter__`/`__exit__`).(Data Ingestion - Thu nạp dữ liệu)
-- [ ] **Task 1.2:** Viết hàm trích xuất Metadata (Hệ tọa độ CRS, Transform matrix, kích thước ảnh gốc).
+- [x] **Task 1.2:** ✅ HOÀN THÀNH — `get_pixel_size()`, `get_bounds()` (xử lý cả ảnh xoay), `pixel_to_coords()` (hỗ trợ offset center/corner).
 - [ ] **Task 1.3:** Viết hàm nạp dữ liệu rải rác (Chunking/Windowed Reading) thay vì nạp toàn bộ ảnh vào RAM. Cần đọc theo Block 256x256 hoặc 512x512 để tránh tràn RAM (OOM - Out Of Memory).
 
 ## 🧠 GIAI ĐOẠN 2: ĐỘNG CƠ CỐT LÕI - CORE ENGINE (File: `src/core/ndvi_engine.py`)

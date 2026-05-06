@@ -28,7 +28,7 @@ class RasterWrapper:
             "width":     self.width,
             "height":    self.height,
             "count":     self.count,
-            "dtype":     str(self.dtypes),
+            "dtype":     str(self.dtypes[0]),
             "crs":       self.crs,
             "transform": self.transform,
         }
@@ -43,10 +43,10 @@ class RasterWrapper:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.close()
 
-    def affine_transform_matrix(self, row: float, col: float) -> tuple:
+    def _apply_transform(self, row: float, col: float) -> tuple:
         t = self.transform
-        x = t.a*col + t.b*row + t.c
-        y = t.d*col + t.e*row + t.f
+        x = t.a * col + t.b * row + t.c
+        y = t.d * col + t.e * row + t.f
         return x, y
 
     def get_pixel_size(self) -> tuple:
@@ -59,10 +59,10 @@ class RasterWrapper:
                     "right": t.c + (self.width*t.a), 
                     "top": t.f, 
                     "bottom": t.f + (self.height*t.e)}
-        corner = [self.affine_trasform_matrix(0, 0), 
-                self.affine_transform_matrix(0, self.width), 
-                self.affine_transform_matrix(self.height, 0), 
-                self.affine_transform_matrix(self.height, self.width)]
+        corner = [self._apply_transform(0, 0),
+                  self._apply_transform(0, self.width),
+                  self._apply_transform(self.height, 0),
+                  self._apply_transform(self.height, self.width)]
         x_coords = [c[0] for c in corner]
         y_coords = [c[1] for c in corner]
         bounds = {
@@ -75,6 +75,6 @@ class RasterWrapper:
     def pixel_to_coords(self, row: int, col: int, offset: str = "center") -> tuple:
         col_offset = col + 0.5 if offset == "center" else col
         row_offset = row + 0.5 if offset == "center" else row
-        return (self.affine_transform_matrix(row_offset, col_offset))
+        return self._apply_transform(row_offset, col_offset)
 
 
