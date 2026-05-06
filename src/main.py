@@ -33,7 +33,7 @@ def main():
         print("\n" + "="*60)
 
 
-        print(band4.pixel_to_coords(row=0, col=0))
+        print(band4.pixel_to_coords(256, 256))
 
 if __name__ == "__main__":
     main()

@@ -43,7 +43,7 @@ class RasterWrapper:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.close()
 
-    def affine_transform_matrix(self, row, col):
+    def affine_transform_matrix(self, row: float, col: float) -> tuple:
         t = self.transform
         x = t.a*col + t.b*row + t.c
         y = t.d*col + t.e*row + t.f
@@ -53,28 +53,28 @@ class RasterWrapper:
         return abs(self.transform.a), abs(self.transform.e)
 
     def get_bounds(self) -> dict:
-        if self.transform.b == 0 & self.transform.f == 0:
-            return {"left": self.transform.c, 
-                    "right": self.transform.c + (self.width*self.transform.a), 
-                    "top": self.transform.f, 
-                    "bottom": self.transform.f + (self.height*self.transform.e)}
+        t = self.transform
+        if abs(t.b) < 1e-9 and abs(t.d) < 1e-9:
+            return {"left": t.c, 
+                    "right": t.c + (self.width*t.a), 
+                    "top": t.f, 
+                    "bottom": t.f + (self.height*t.e)}
         corner = [self.affine_trasform_matrix(0, 0), 
-                self.affine_transform_matrix(0, self.height), 
-                self.affine_transform_matrix(self.width, 0), 
-                self.affine_transform_matrix(self.width, self.height)]
-        x = [c[0] for c in corner]
-        y = [c[1] for c in corner]
+                self.affine_transform_matrix(0, self.width), 
+                self.affine_transform_matrix(self.height, 0), 
+                self.affine_transform_matrix(self.height, self.width)]
+        x_coords = [c[0] for c in corner]
+        y_coords = [c[1] for c in corner]
         bounds = {
-            "left": min(x),
-            "right": max(x),
-            "top": max(y),
-            "bottom": min(y)
+            "left": min(x_coords),
+            "right": max(x_coords),
+            "top": max(y_coords),
+            "bottom": min(y_coords)
         }
         return bounds
-    def pixel_to_coords(self, row: int, col: int) -> tuple:
-        if self.transform.b == 0 & self.transform.f == 0:
-            return (self.transform.a*col + self.transform.c,
-                    self.transform.e*row + self.transform.f)
-        return (self.affine_transform_matrix(row, col))
+    def pixel_to_coords(self, row: int, col: int, offset: str = "center") -> tuple:
+        col_offset = col + 0.5 if offset == "center" else col
+        row_offset = row + 0.5 if offset == "center" else row
+        return (self.affine_transform_matrix(row_offset, col_offset))
 
 

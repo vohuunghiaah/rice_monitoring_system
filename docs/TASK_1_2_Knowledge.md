@@ -318,12 +318,12 @@ Nếu cả 3 đều đúng → logic của bạn nhất quán.
 
 ## 🎯 CHECKLIST — Sẵn sàng code Task 1.2 chưa?
 
-- [ ] Tôi biết `transform.a` = pixel size X và `transform.e` = pixel size Y (âm).
-- [ ] Tôi hiểu tại sao `e` âm — vì row tăng xuống = Y tọa độ giảm.
-- [ ] Tôi biết công thức: `x = a×col + c` và `y = e×row + f`.
-- [ ] Tôi tính được bounding box từ `c, f, a, e, width, height`.
-- [ ] Tôi hiểu `pixel_to_coords(0,0)` trả về góc trên-trái (không phải tâm pixel).
-- [ ] Tôi biết kiểm tra tính nhất quán bằng 3 câu sanity check ở trên.
+- [x] Tôi biết `transform.a` = pixel size X và `transform.e` = pixel size Y (âm).
+- [x] Tôi hiểu tại sao `e` âm — vì row tăng xuống = Y tọa độ giảm.
+- [x] Tôi biết công thức: `x = a×col + c` và `y = e×row + f`.
+- [x] Tôi tính được bounding box từ `c, f, a, e, width, height`.
+- [x] Tôi hiểu `pixel_to_coords(0,0)` trả về góc trên-trái (không phải tâm pixel).
+- [x] Tôi biết kiểm tra tính nhất quán bằng 3 câu sanity check ở trên.
 
 ---
 
