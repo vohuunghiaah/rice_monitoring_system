@@ -26,7 +26,7 @@
 \cfoot{\thepage}
 \renewcommand{\headrulewidth}{1pt}
 
-% --- CẤU HÌNH LISTINGS (Đã fix lỗi tiếng Việt) ---
+% --- CẤU HÌNH LISTINGS ---
 \usepackage{listings}
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -126,25 +126,19 @@
 \tableofcontents
 \newpage
 
-\chapter{KIẾN THỨC NỀN TẢNG — TASK 1.1}
-
-\begin{quote}
-    \textbf{Mục tiêu}: Hiểu đủ sâu để tự viết class đọc ảnh Raster từ \texttt{data/01\_raw/}\\
-    \textbf{File sẽ viết}: \texttt{src/io/raster\_wrapper.py}
-\end{quote}
-
+\chapter{KIẾN THỨC NỀN TẢNG}
 \noindent\rule{\textwidth}{0.4pt}
 
-\section{PHẦN 1 — ẢNH VỆ TINH LÀ GÌ? (Raster Data)}
+\section{ẢNH VỆ TINH LÀ GÌ? (Raster Data)}
 
-\subsection{1.1 Raster vs Vector}
+\subsection{Raster vs Vector}
 Trong GIS (Hệ thống thông tin địa lý) có 2 kiểu dữ liệu chính:
 \begin{itemize}
     \item \textbf{Vector}: Lưu theo dạng điểm, đường, vùng (polygon). Ví dụ: ranh giới tỉnh thành.
     \item \textbf{Raster}: Lưu dưới dạng \textbf{lưới ô vuông (Grid)}, mỗi ô là một pixel có giá trị số. $\rightarrow$ Ảnh vệ tinh là Raster.
 \end{itemize}
 
-\subsection{1.2 Cấu trúc dữ liệu của một ảnh Raster trong bộ nhớ}
+\subsection{Cấu trúc dữ liệu của một ảnh Raster trong bộ nhớ}
 Hãy hình dung ảnh Raster là một \textbf{mảng 3 chiều (3D Array)}:
 
 \begin{lstlisting}[language=bash, numbers=none]
@@ -158,7 +152,7 @@ Hãy hình dung ảnh Raster là một \textbf{mảng 3 chiều (3D Array)}:
     \item \textbf{Giá trị mỗi pixel}: Là số nguyên \textbf{uint16} (0 $\rightarrow$ 65535), biểu diễn cường độ phản xạ ánh sáng.
 \end{itemize}
 
-\subsection{1.3 Sentinel-2 — Band nào dùng để tính NDVI?}
+\subsection{Sentinel-2 — Band nào dùng để tính NDVI?}
 \begin{table}[H]
 \centering
 \begin{tabular}{|c|c|c|c|l|}
@@ -172,7 +166,7 @@ B08 & NIR & 842 nm & 10m/px & Hồng ngoại cây phản xạ \\
 \end{table}
 $\rightarrow$ \textbf{Chỉ cần 2 band: B04 và B08} để tính NDVI.
 
-\subsection{1.4 Định dạng file}
+\subsection{Định dạng file}
 \begin{itemize}
     \item \textbf{GeoTIFF (\texttt{.tif})}: Định dạng phổ biến nhất, chứa cả dữ liệu pixel lẫn thông tin địa lý (CRS, Transform).
     \item \textbf{JPEG2000 (\texttt{.jp2})}: Định dạng nén Sentinel-2 gốc tải về từ Copernicus Hub.
@@ -180,11 +174,11 @@ $\rightarrow$ \textbf{Chỉ cần 2 band: B04 và B08} để tính NDVI.
 
 \noindent\rule{\textwidth}{0.4pt}
 
-\section{PHẦN 2 — THÔNG TIN ĐỊA LÝ ĐÍNH KÈM (Geospatial Metadata)}
+\section{THÔNG TIN ĐỊA LÝ ĐÍNH KÈM (Geospatial Metadata)}
 
 Điều khác biệt lớn nhất của ảnh vệ tinh so với ảnh chụp thông thường là nó có \textbf{tọa độ thực địa} gắn liền. Khi mở file, bạn không chỉ đọc pixel mà còn cần đọc 2 thứ quan trọng:
 
-\subsection{2.1 CRS — Hệ tọa độ tham chiếu (Coordinate Reference System)}
+\subsection{CRS — Hệ tọa độ tham chiếu (Coordinate Reference System)}
 \begin{itemize}
     \item Mô tả cách \textbf{"chiếu"} bề mặt cầu Trái Đất lên mặt phẳng 2D.
     \item Sentinel-2 thường dùng \textbf{EPSG:32648} (UTM Zone 48N) cho khu vực Việt Nam.
@@ -195,7 +189,7 @@ $\rightarrow$ \textbf{Chỉ cần 2 band: B04 và B08} để tính NDVI.
     Ví dụ: \texttt{"EPSG:32648"} $\rightarrow$ UTM Zone 48N $\rightarrow$ Phù hợp Đồng bằng sông Cửu Long.
 \end{quote}
 
-\subsection{2.2 Affine Transform Matrix — Ma trận biến đổi}
+\subsection{Affine Transform Matrix — Ma trận biến đổi}
 Đây là ma trận 3x3 ánh xạ từ tọa độ pixel (col, row) sang \textbf{tọa độ phẳng (Planar Coordinates - X, Y)}. Để chuyển tiếp từ không gian phẳng này sang \textbf{tọa độ địa lý mặt cầu (Kinh độ, Vĩ độ)}, dữ liệu cần được đưa qua các phương trình biến đổi của hệ quy chiếu (CRS).
 
 \begin{equation*}
@@ -229,13 +223,13 @@ Trong đó:
 
 \noindent\rule{\textwidth}{0.4pt}
 
-\section{PHẦN 3 — THƯ VIỆN (\texttt{rasterio}) — CẦU NỐI PYTHON \(\leftrightarrow\) FILE ẢNH}
+\section{THƯ VIỆN (\texttt{rasterio}) — CẦU NỐI PYTHON \(\leftrightarrow\) FILE ẢNH}
 
-\subsection{3.1 Rasterio là gì?}
+\subsection{Rasterio là gì?}
 \texttt{rasterio} là thư viện Python wrapper của \textbf{GDAL} (Geospatial Data Abstraction Library - viết bằng C++). Nó giúp Python đọc/ghi các định dạng GeoTIFF, JP2, HDF5... mà không cần tự parse binary file.
 
-\subsection{3.2 Khái niệm cốt lõi: Dataset Object}
-Khi mở file với \texttt{rasterio}, nhận về một \textbf{Dataset Object} — tương tự như \texttt{file handle} khi dùng \texttt{open()} thông thường.
+\subsection{Khái niệm cốt lõi: Dataset Object}
+Khi mở file với \texttt{rasterio}, nhận về một \textbf{Dataset Object}.
 
 \begin{lstlisting}[language=python]
 dataset = rasterio.open("data/01_raw/T48PXS_B04.jp2")
@@ -253,31 +247,11 @@ data = dataset.read(1)  # shape: (height, width)
 dataset.close()
 \end{lstlisting}
 
-\begin{quote}
-    \textbf{Vấn đề}: \texttt{dataset.read(1)} nạp \textbf{toàn bộ} ảnh vào RAM. Với ảnh 10980x10980 uint16, đây là lý do ta sẽ học Chunking sau này .
-\end{quote}
-\begin{quote}
-    \textbf{Ma trận Transform (Affine):} Thuật toán chuyển đổi chỉ mục phần tử (cột, hàng) của mảng bộ nhớ (NumPy) thành tọa độ phẳng (X, Y) trên không gian bản đồ (thường tính bằng mét).
-
-    \medskip
-    \textbf{Hệ tọa độ tham chiếu (CRS):} Hệ thống định nghĩa mặt phẳng bản đồ, đồng thời chứa các phương trình toán học để biến đổi qua lại giữa tọa độ phẳng (X, Y) và tọa độ địa lý mặt cầu (Kinh độ, Vĩ độ).
-\end{quote}
-
-\subsection{3.3 Context Manager — Pattern chuẩn}
-Sử dụng \texttt{with} để đảm bảo file luôn được đóng đúng cách:
-
-\begin{lstlisting}[language=python]
-with rasterio.open("path/to/file.tif") as dataset:
-    meta = dataset.meta      # read metadata
-    data = dataset.read(1)   # read band 1
-# dataset handle .close() is here
-\end{lstlisting}
-
 \noindent\rule{\textwidth}{0.4pt}
 
-\section{PHẦN 4 — QUẢN LÝ BỘ NHỚ CƠ BẢN}
+\section{QUẢN LÝ BỘ NHỚ CƠ BẢN}
 
-\subsection{4.1 Tính toán RAM tiêu thụ}
+\subsection{Tính toán RAM tiêu thụ}
 \begin{lstlisting}[language=bash, numbers=none]
 1 pixel Sentinel-2  = uint16 = 2 bytes
 1 band B04          = 10980 * 10980 * 2 bytes
@@ -287,32 +261,206 @@ with rasterio.open("path/to/file.tif") as dataset:
 Cả 4 band (B02,B03,B04,B08) = ~920 MB
 \end{lstlisting}
 
-\subsection{4.2 Lazy Loading \& 4.3 File Handle}
-\texttt{rasterio.open()} không đọc pixel ngay. Dữ liệu chỉ nạp vào RAM khi gọi \texttt{.read()}. File handle là tài nguyên OS, nếu mở quá nhiều file mà không đóng sẽ dẫn đến lỗi tràn bộ mô tả tệp (Too many open files).
+\chapter{CẤU TRÚC ĐẦY ĐỦ CỦA MA TRẬN AFFINE}
 
-\noindent\rule{\textwidth}{0.4pt}
-
-\section*{GHI NHỚ CỐT LÕI}
+\begin{equation*}
+\begin{pmatrix}
+    a  &  b  &  c \\
+    d  &  e  &  f \\
+    0  &  0  &  1
+\end{pmatrix}
+\end{equation*}
 \begin{table}[H]
 \centering
-\begin{tabularx}{\textwidth}{|l|X|}
+\begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{Khái niệm} & \textbf{Bản chất} \\
+\textbf{Ký hiệu} & \textbf{Tên gọi} & \textbf{Giá trị trong ảnh test} & \textbf{Ý nghĩa} \\
 \hline
-Raster Image & Mảng 3D số nguyên \texttt{[Band, H, W]} lưu cường độ bức xạ. \\
+$c$ & X-origin & $560000.0$ & Tọa độ X của góc trên-trái \\
+$f$ & Y-origin & $1075120.0$ & Tọa độ Y của góc trên-trái \\
+$a$ & X pixel size & $+10.0$ & Mỗi bước sang phải 1 cột = thêm 10 mét \\
+$e$ & Y pixel size & $-10.0$ & Mỗi bước xuống 1 hàng = giảm 10 mét \\
+$b$, $d$ & Rotation & $0.0$ & Ảnh không bị xoay \\
 \hline
-Band & 1 kênh ảnh = 1 mảng 2D. Sentinel-2 có 13 bands. \\
+\end{tabular}
+\end{table}
+
+\section{Tại sao e âm?}
+
+Đây là điểm \textbf{gây nhầm lẫn nhiều nhất} với người mới:
+
+\begin{verbatim}
+Hệ tọa độ MẢNG (NumPy):          Hệ tọa độ BẢN ĐỒ (thực địa):
+  Row 0  <- Hàng ĐẦU TIÊN            Y tăng lên = về phía Bắc (Lên)
+  Row 1                              Y giảm xuống = về phía Nam (Xuống)
+  Row 2
+  ...
+  Row N  <- Hàng CUỐI CÙNG
+\end{verbatim}
+
+Row 0 trong mảng = Vị trí \textbf{phía Bắc nhất} trên bản đồ (Y lớn nhất). \\
+Row 1 = bước xuống 1 hàng $\rightarrow$ đi về phía Nam $\rightarrow$ Y \textbf{giảm}.
+
+$\rightarrow e = -10.0$ vì "đi xuống 1 hàng pixel = giảm 10 mét tọa độ Y".
+
+\section{Truy cập từng phần tử của Transform trong rasterio}
+
+\begin{lstlisting}[language=python]
+t = dataset.transform   # object affine.Affine
+
+t.a   # pixel size theo X (thường = +10.0)
+t.b   # rotation x (thường = 0.0)
+t.c   # X tọa độ góc trên-trái
+t.d   # rotation y (thường = 0.0)
+t.e   # pixel size theo Y (thường = -10.0)
+t.f   # Y tọa độ góc trên-trái
+\end{lstlisting}
+
+\section{Pixel size (GSD) là gì?}
+
+Pixel size (hay Ground Sampling Distance — GSD) là \textbf{kích thước thực địa của 1 pixel} trên mặt đất.
+
+\begin{verbatim}
+Sentinel-2 Band 4 và Band 8: mỗi pixel = 10m × 10m
+(1 pixel đại diện cho 10m × 10m diện tích thực)
+\end{verbatim}
+
+\textbf{Đọc pixel size từ đâu?} \\
+Pixel size nằm ngay trong ma trận Affine:
+\begin{itemize}
+    \item \textbf{Chiều X} $\rightarrow$ lấy giá trị tuyệt đối của \texttt{transform.a} $\rightarrow$ $|t.a| = 10.0$
+    \item \textbf{Chiều Y} $\rightarrow$ lấy giá trị tuyệt đối của \texttt{transform.e} $\rightarrow$ $|t.e| = 10.0$
+\end{itemize}
+
+\begin{quote}
+Dùng \texttt{abs()} vì \texttt{e} âm nhưng kích thước pixel luôn là khoảng cách vật lý (số dương).
+\end{quote}
+
+\section{Bounding Box là gì?}
+
+Bounding Box (hộp giới hạn) là hình chữ nhật \textbf{nhỏ nhất} bao quanh toàn bộ ảnh, được mô tả bằng 4 tọa độ cực đại thực địa:
+
+\begin{verbatim}
+              <- left <-                    -> right ->
+              |                                   |
+TOP (North)   +-----------------------------------+  ^ top
+              |                                   |
+              |         TOÀN BỘ ẢNH               |
+              |                                   |
+BOTTOM(South) +-----------------------------------+  v bottom
+\end{verbatim}
+
+\subsection{Trường hợp lý tưởng ($b, d = 0$ - Ảnh không bị xoay)}
+Hệ phương trình tọa độ:
+\begin{align*}
+ x &= a \cdot col + c \\
+ y &= e \cdot row + f
+\end{align*}
+
+Để tìm giới hạn, ta xét các biên của ma trận ảnh:
+\begin{itemize}
+    \item Để $x_{min}$ thì $col = 0 \rightarrow left = c$
+    \item Để $x_{max}$ thì $col = width \rightarrow right = c + a \cdot width$
+    \item Để $y_{max}$ thì $row = 0 \rightarrow top = f$
+    \item Để $y_{min}$ thì $row = height \rightarrow bottom = f + e \cdot height$
+\end{itemize}
+
+\textbf{Ví dụ minh họa:}
+\begin{align*}
+left &= 560000.0 \\
+right &= 560000.0 + 10.0 \times 512 = 565120.0 \\
+top &= 1075120.0 \\
+bottom &= 1075120.0 + (-10.0) \times 512 = 1070000.0
+\end{align*}
+
+\subsection{Trường hợp tổng quát ($b, d \neq 0$ - Ảnh bị xoay nghiêng)}
+Hệ phương trình tọa độ đầy đủ:
+\begin{align*}
+ x &= a \cdot col + b \cdot row + c \\
+ y &= d \cdot col + e \cdot row + f
+\end{align*}
+
+Xác định tọa độ $(x, y)$ tại 4 góc của ma trận ảnh:
+\begin{itemize}
+    \item Góc trên-trái ($col=0, row=0$): $x_1 = c, \quad y_1 = f$
+    \item Góc trên-phải ($col=width, row=0$): $x_2 = a \cdot width + c, \quad y_2 = d \cdot width + f$
+    \item Góc dưới-trái ($col=0, row=height$): $x_3 = b \cdot height + c, \quad y_3 = e \cdot height + f$
+    \item Góc dưới-phải ($col=width, row=height$): $x_4 = a \cdot width + b \cdot height + c, \quad y_4 = d \cdot width + e \cdot height + f$
+\end{itemize}
+
+Tọa độ hộp giới hạn (Bounding Box) chứa toàn bộ ảnh xoay:
+\begin{align*}
+    left &= \min(x_1, x_2, x_3, x_4) \\
+    right &= \max(x_1, x_2, x_3, x_4) \\
+    top &= \max(y_1, y_2, y_3, y_4) \\
+    bottom &= \min(y_1, y_2, y_3, y_4)
+\end{align*}
+
+\section{Ứng dụng nhân ma trận Affine}
+
+Đây là ứng dụng trực tiếp của phép nhân ma trận. Phương trình tổng quát chuyển đổi tọa độ điểm ảnh sang tọa độ thực địa:
+
+\begin{equation*}
+\begin{pmatrix}
+    x_{\text{real}} \\
+    y_{\text{real}} \\
+    1
+\end{pmatrix}
+=
+\begin{pmatrix}
+    a & b & c \\
+    d & e & f \\
+    0 & 0 & 1
+\end{pmatrix}
+\begin{pmatrix}
+    col \\
+    row \\
+    1
+\end{pmatrix}
+\end{equation*}
+
+Khai triển hệ phương trình (khi ảnh không bị xoay, tức là $b = 0, d = 0$):
+\begin{align*}
+    x_{\text{real}} &= a \cdot col + c \\
+    y_{\text{real}} &= e \cdot row + f
+\end{align*}
+
+\section{Tọa độ trả về: Góc pixel hay Tâm pixel?}
+
+Trong quá trình xử lý hệ thống thông tin địa lý (GIS), cần phân biệt rõ 2 quy ước tính toán tọa độ điểm ảnh:
+\begin{itemize}
+    \item \textbf{Góc trên-trái của pixel}: Rasterio mặc định sử dụng chuẩn này. Ví dụ với gốc tọa độ `(row=0, col=0)` $\rightarrow$ `(560000, 1075120)`.
+    \item \textbf{Tâm pixel (Center Pixel)}: Tọa độ bị dịch chuyển (offset) thêm một nửa độ lớn của pixel size theo mỗi trục. Ví dụ `(row=0, col=0)` $\rightarrow$ `(560005, 1075115)`.
+\end{itemize}
+
+\textbf{Lưu ý triển khai:} Trong dự án thực tế của báo cáo này, hệ thống đã được can thiệp để implement logic lấy \textbf{tâm pixel} nhằm tăng độ chính xác khi đối chiếu với dữ liệu GPS (tọa độ GPS trên thực địa mặc định được coi là tâm của một vùng không gian).
+
+\section{Tổng kết Logic Xử lý \& Checklist}
+
+\subsection*{Checklist xác thực kiến thức}
+\begin{itemize}
+    \item[\checkmark] Hiểu rõ \texttt{transform.a} = pixel size theo trục X và \texttt{transform.e} = pixel size theo trục Y (thường là số âm).
+    \item[\checkmark] Nắm vững lý do \texttt{e} mang giá trị âm: Trong hệ tọa độ mảng, chỉ số hàng (row) tăng dần từ trên xuống dưới, tương ứng với việc tọa độ Y trên thực địa đang giảm dần (đi về phía Nam).
+    \item[\checkmark] Làm chủ phương trình ánh xạ tọa độ: $x = a \cdot col + c$ và $y = e \cdot row + f$.
+    \item[\checkmark] Tự tính toán được Bounding Box (khung bao giới hạn) từ tập hợp tham số \texttt{c, f, a, e, width, height}.
+    \item[\checkmark] Nắm được hành vi mặc định của \texttt{pixel\_to\_coords(0,0)} là trả về tọa độ ở góc trên-trái (top-left).
+\end{itemize}
+
+\subsection*{Bảng ánh xạ hàm xử lý}
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|l|l|X|}
 \hline
-CRS & "Ngôn ngữ tọa độ" — ánh xạ pixel ra kinh độ/vĩ độ. \\
+\textbf{Hàm xử lý} & \textbf{Nguồn dữ liệu đầu vào} & \textbf{Công thức / Logic tính toán} \\
 \hline
-Affine Transform & Ma trận 3x3 chuyển đổi \texttt{(col, row)} $\rightarrow$ \texttt{(x\_real, y\_real)}. \\
+\texttt{get\_pixel\_size()} & \texttt{transform.a}, \texttt{transform.e} & Lấy trị tuyệt đối: \texttt{(abs(a), abs(e))} \\
 \hline
-\texttt{rasterio.open()} & Mở file handle + đọc header, CHƯA nạp pixel vào RAM. \\
+\texttt{get\_bounds()} & \texttt{transform.c/f/a/e} \& \texttt{W/H} & Biên phải: $right = c + a \cdot W$ \newline Biên dưới: $bottom = f + e \cdot H$ \\
 \hline
-\texttt{with} block & Đảm bảo file tự động đóng, tránh rò rỉ bộ nhớ. \\
-\hline
-uint16 & Kiểu số nguyên 16-bit (0 $\rightarrow$ 65535), 1 pixel = 2 bytes. \\
+\texttt{pixel\_to\_coords()} & \texttt{transform.a/c/e/f} & $x = a \cdot col + c$ \newline $y = e \cdot row + f$ \newline \textit{(*Cộng thêm offset $\frac{a}{2}, \frac{e}{2}$ nếu dùng tâm pixel)} \\
 \hline
 \end{tabularx}
 \end{table}
+
 \end{document}

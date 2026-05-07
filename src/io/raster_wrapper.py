@@ -76,5 +76,5 @@ class RasterWrapper:
         col_offset = col + 0.5 if offset == "center" else col
         row_offset = row + 0.5 if offset == "center" else row
         return self._apply_transform(row_offset, col_offset)
-
+    
 
