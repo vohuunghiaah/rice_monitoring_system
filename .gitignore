@@ -1,3 +1,13 @@
-
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.svg
+*.tex
+TASK_1_1_Knowledge.md
+TASK_1_2_Knowledge.md
+TASK_1_3_Knowledge.md
 __pycache__/
-*.pdf
