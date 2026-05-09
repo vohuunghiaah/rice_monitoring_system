@@ -1,4 +1,5 @@
 import rasterio
+from rasterio.windows import Window
 import numpy as np
 
 class RasterWrapper:
@@ -77,4 +78,10 @@ class RasterWrapper:
         row_offset = row + 0.5 if offset == "center" else row
         return self._apply_transform(row_offset, col_offset)
     
+    def read_chunk(self.file_path):
+        with rasterio.open("self.file_path") as ds:
+            window = Window(0, 0, 256, 256)
+            chunk = ds.read(1, window=window)
+            #chank.shape = (256, 256) nạp 256x256 pixel từ ảnh
+
 
