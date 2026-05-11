@@ -78,10 +78,14 @@ class RasterWrapper:
         row_offset = row + 0.5 if offset == "center" else row
         return self._apply_transform(row_offset, col_offset)
     
-    def read_chunk(self.file_path):
-        with rasterio.open("self.file_path") as ds:
-            window = Window(0, 0, 256, 256)
-            chunk = ds.read(1, window=window)
-            #chank.shape = (256, 256) nạp 256x256 pixel từ ảnh
+    def read_chunk(self, band_index: int = 1, chunk_size: int = 256):
+        for i in range(0, self.width, chunk_size):
+            for j in range(0, self.height, chunk_size):
+                actual_width = min(chunk_size, self.width - i)
+                actual_height = min(chunk_size, self.height - j)
+                w = Window(i, j, actual_width, actual_height)
+                chunk = self.src.read(band_index, window=w)
+                #chank.shape = (256, 256) nạp 256x256 pixel từ ảnh
+                yield(chunk, w, i, j)
 
 

@@ -156,11 +156,11 @@ Generator **lưu trạng thái** (local variables, vị trí thực thi) giữa 
 
 ### 3.4 Khi nào dùng Generator?
 
-| Dùng List | Dùng Generator |
-|---|---|
-| Cần truy cập ngẫu nhiên (index) | Chỉ duyệt tuần tự 1 lần |
-| Cần biết tổng số phần tử trước | Không biết trước số phần tử |
-| Tập dữ liệu nhỏ, vừa RAM | Tập dữ liệu lớn, không vừa RAM |
+| Dùng List                       | Dùng Generator                   |
+|---------------------------------|----------------------------------|
+| Cần truy cập ngẫu nhiên (index) | Chỉ duyệt tuần tự 1 lần          |
+| Cần biết tổng số phần tử trước  | Không biết trước số phần tử      |
+| Tập dữ liệu nhỏ, vừa RAM        | Tập dữ liệu lớn, không vừa RAM   |
 
 → **Chunked reading = use case hoàn hảo cho Generator**
 
