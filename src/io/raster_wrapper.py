@@ -85,7 +85,6 @@ class RasterWrapper:
                 actual_height = min(chunk_size, self.height - row_off)
                 w = Window(col_off, row_off, actual_width, actual_height)
                 chunk = self.src.read(band_index, window=w)
-                #chank.shape = (256, 256) nạp 256x256 pixel từ ảnh
                 yield(chunk, w, row_off, col_off)
 
 
