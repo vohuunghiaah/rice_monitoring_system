@@ -18,7 +18,6 @@ Kiến trúc dự án được thiết kế theo hướng module hóa, tách bi�
 rice_monitoring_system/
 ├── .gitattributes
 ├── .gitignore
-├── EXECUTION_ROADMAP.md      # Kế hoạch phát triển, milestones (Python -> C++)
 ├── README.md
 ├── requirements.txt          # Chứa các dependencies (rasterio, numpy,...)
 ├── data/

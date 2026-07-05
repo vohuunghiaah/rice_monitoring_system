@@ -1,9 +1,18 @@
 import pprint
 from src.io.raster_wrapper import RasterWrapper
-
+from src.io.downloader import SentinelDownloader
 def main():
     file_path = "./data/01_raw/B04_RED.jp2"
     print("[INFO] Khởi chạy kiểm tra I/O Pipeline...\n")
+
+    # Ingestion
+    
+    #Boudiing box
+    bbox_dbscl = [105.0, 9.5,  106.0, 10.5]
+    time_window = "2026-05-01/2026-05-20"
+
+    try:
+        local_file = downloader.search_and_download
 
     with RasterWrapper(file_path) as band4:
         # Căn giữa tiêu đề với tổng chiều dài 60 ký tự
