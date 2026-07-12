@@ -1,18 +1,26 @@
 import pprint
+import requests
 from src.io.raster_wrapper import RasterWrapper
 from src.io.downloader import SentinelDownloader
+
+
 def main():
-    file_path = "./data/01_raw/B04_RED.jp2"
     print("[INFO] Khởi chạy kiểm tra I/O Pipeline...\n")
 
     # Ingestion
-    
+    downloader = SentinelDownloader()
+
     #Boudiing box
     bbox_dbscl = [105.0, 9.5,  106.0, 10.5]
     time_window = "2026-05-01/2026-05-20"
 
     try:
-        local_file = downloader.search_and_download
+        downloaded_files = downloader.search_and_download(bbox_dbscl, time_window)
+    except (ValueError, requests.exceptions.RequestException) as e:
+        print(f"[ERROR] Ingestion failed: {e}")
+        return
+
+    file_path = downloaded_files["B04"]
 
     with RasterWrapper(file_path) as band4:
         # Căn giữa tiêu đề với tổng chiều dài 60 ký tự
@@ -33,12 +41,12 @@ def main():
         print("\n" + "-"*60)
         print(" RAW METADATA DICTIONARY ".center(60))
         print("-"*60)
-        
+
         # Sử dụng pprint thay cho print để in từ điển (dict)
         # indent=4: thụt lề 4 space cho mỗi cấp
         # sort_dicts=False: Giữ nguyên thứ tự key gốc của rasterio
         pprint.pprint(band4.meta, indent=4, sort_dicts=False)
-        
+
         print("\n" + "="*60)
 
 

@@ -1,3 +1,5 @@
 rasterio
 numpy
 manim
+requests
+pystac_client

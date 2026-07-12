@@ -4,6 +4,7 @@
 \usepackage{pdflscape}
 \usepackage{hyperref}
 \usepackage{tabularx}
+\renewcommand\tabularxcolumn[1]{>{\arraybackslash}m{#1}} % Căn giữa dọc cho cột X (mặc định bị lệch đáy)
 \usepackage{float}
 \usepackage[margin=2.5cm]{geometry}
 \usepackage[table,xcdraw]{xcolor}
@@ -11,12 +12,33 @@
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 \usepackage{caption}
-\usepackage{amsmath} 
-\usepackage{amssymb} 
+\usepackage{amsmath}
+\usepackage{amssymb}
 
 % --- THƯ VIỆN ĐỒ HỌA ---
 \usepackage{tikz}
-\usetikzlibrary{calc} 
+\usetikzlibrary{calc}
+\usepackage[most]{tcolorbox}
+
+% --- HỘP NHẤN MẠNH (CALLOUT BOXES) — đồng bộ tông xanh của trang bìa ---
+\newtcolorbox{insightbox}[1]{
+    colback=blue!5, colframe=blue!80!black, boxrule=0.8pt, arc=2mm,
+    left=6pt, right=6pt, top=5pt, bottom=5pt,
+    fonttitle=\bfseries, coltitle=white, colbacktitle=blue!80!black,
+    title=#1
+}
+\newtcolorbox{resultbox}[1]{
+    colback=green!5, colframe=green!35!black, boxrule=0.8pt, arc=2mm,
+    left=6pt, right=6pt, top=5pt, bottom=5pt,
+    fonttitle=\bfseries, coltitle=white, colbacktitle=green!35!black,
+    title=#1
+}
+\newtcolorbox{warningbox}[1]{
+    colback=red!5, colframe=red!60!black, boxrule=0.8pt, arc=2mm,
+    left=6pt, right=6pt, top=5pt, bottom=5pt,
+    fonttitle=\bfseries, coltitle=white, colbacktitle=red!60!black,
+    title=#1
+}
 
 % --- CẤU HÌNH HEADER/FOOTER ---
 \pagestyle{fancy}
@@ -155,16 +177,21 @@ Hãy hình dung ảnh Raster là một \textbf{mảng 3 chiều (3D Array)}:
 \subsection{Sentinel-2 — Band nào dùng để tính NDVI?}
 \begin{table}[H]
 \centering
-\begin{tabular}{|c|c|c|c|l|}
+\begin{tabularx}{\textwidth}{|c|c|c|c|X|}
 \hline
-\textbf{Band} & \textbf{Tên} & \textbf{Bước sóng} & \textbf{Độ phân giải} & \textbf{Dùng để} \\
+\rowcolor{blue!80!black}
+{\color{white}\textbf{Band}} & {\color{white}\textbf{Tên}} & {\color{white}\textbf{Bước sóng}} & {\color{white}\textbf{Độ phân giải}} & {\color{white}\textbf{Dùng để}} \\
 \hline
 B04 & RED & 665 nm & 10m/px & Ánh sáng đỏ cây hấp thụ \\
+\hline
 B08 & NIR & 842 nm & 10m/px & Hồng ngoại cây phản xạ \\
 \hline
-\end{tabular}
+\end{tabularx}
 \end{table}
-$\rightarrow$ \textbf{Chỉ cần 2 band: B04 và B08} để tính NDVI.
+
+\begin{resultbox}{Kết luận}
+Chỉ cần \textbf{2 band: B04 và B08} để tính NDVI.
+\end{resultbox}
 
 \subsection{Định dạng file}
 \begin{itemize}
@@ -185,9 +212,9 @@ $\rightarrow$ \textbf{Chỉ cần 2 band: B04 và B08} để tính NDVI.
     \item Được biểu diễn bằng chuỗi \textbf{WKT} hoặc mã \textbf{EPSG}.
 \end{itemize}
 
-\begin{quote}
-    Ví dụ: \texttt{"EPSG:32648"} $\rightarrow$ UTM Zone 48N $\rightarrow$ Phù hợp Đồng bằng sông Cửu Long.
-\end{quote}
+\begin{insightbox}{Ví dụ}
+\texttt{"EPSG:32648"} $\rightarrow$ UTM Zone 48N $\rightarrow$ Phù hợp Đồng bằng sông Cửu Long.
+\end{insightbox}
 
 \subsection{Affine Transform Matrix — Ma trận biến đổi}
 Đây là ma trận 3x3 ánh xạ từ tọa độ pixel (col, row) sang \textbf{tọa độ phẳng (Planar Coordinates - X, Y)}. Để chuyển tiếp từ không gian phẳng này sang \textbf{tọa độ địa lý mặt cầu (Kinh độ, Vĩ độ)}, dữ liệu cần được đưa qua các phương trình biến đổi của hệ quy chiếu (CRS).
@@ -219,7 +246,9 @@ Trong đó:
     \item \textbf{b, d}: Thường = 0 nếu ảnh không bị xoay.
 \end{itemize}
 
-\textbf{Tại sao cần matrix này?} Để sau khi tính NDVI xong, có thể ghi kết quả ra file mới mà vẫn giữ nguyên tọa độ thực địa.
+\begin{insightbox}{Tại sao cần matrix này?}
+Để sau khi tính NDVI xong, có thể ghi kết quả ra file mới mà vẫn giữ nguyên tọa độ thực địa.
+\end{insightbox}
 
 \noindent\rule{\textwidth}{0.4pt}
 
@@ -262,6 +291,7 @@ Cả 4 band (B02,B03,B04,B08) = ~920 MB
 \end{lstlisting}
 
 \chapter{CẤU TRÚC ĐẦY ĐỦ CỦA MA TRẬN AFFINE}
+\noindent\rule{\textwidth}{0.4pt}
 
 \begin{equation*}
 \begin{pmatrix}
@@ -272,9 +302,10 @@ Cả 4 band (B02,B03,B04,B08) = ~920 MB
 \end{equation*}
 \begin{table}[H]
 \centering
-\begin{tabular}{|l|l|l|l|}
+\begin{tabularx}{\textwidth}{|l|l|l|X|}
 \hline
-\textbf{Ký hiệu} & \textbf{Tên gọi} & \textbf{Giá trị trong ảnh test} & \textbf{Ý nghĩa} \\
+\rowcolor{blue!80!black}
+{\color{white}\textbf{Ký hiệu}} & {\color{white}\textbf{Tên gọi}} & {\color{white}\textbf{Giá trị trong ảnh test}} & {\color{white}\textbf{Ý nghĩa}} \\
 \hline
 $c$ & X-origin & $560000.0$ & Tọa độ X của góc trên-trái \\
 $f$ & Y-origin & $1075120.0$ & Tọa độ Y của góc trên-trái \\
@@ -282,10 +313,10 @@ $a$ & X pixel size & $+10.0$ & Mỗi bước sang phải 1 cột = thêm 10 mét
 $e$ & Y pixel size & $-10.0$ & Mỗi bước xuống 1 hàng = giảm 10 mét \\
 $b$, $d$ & Rotation & $0.0$ & Ảnh không bị xoay \\
 \hline
-\end{tabular}
+\end{tabularx}
 \end{table}
 
-\section{Tại sao e âm?}
+\section{TẠI SAO $e$ ÂM?}
 
 Đây là điểm \textbf{gây nhầm lẫn nhiều nhất} với người mới:
 
@@ -301,9 +332,11 @@ Hệ tọa độ MẢNG (NumPy):          Hệ tọa độ BẢN ĐỒ (thực �
 Row 0 trong mảng = Vị trí \textbf{phía Bắc nhất} trên bản đồ (Y lớn nhất). \\
 Row 1 = bước xuống 1 hàng $\rightarrow$ đi về phía Nam $\rightarrow$ Y \textbf{giảm}.
 
-$\rightarrow e = -10.0$ vì "đi xuống 1 hàng pixel = giảm 10 mét tọa độ Y".
+\begin{insightbox}{Kết luận}
+$e = -10.0$ vì ``đi xuống 1 hàng pixel = giảm 10 mét tọa độ Y''.
+\end{insightbox}
 
-\section{Truy cập từng phần tử của Transform trong rasterio}
+\section{TRUY CẬP TỪNG PHẦN TỬ CỦA TRANSFORM TRONG RASTERIO}
 
 \begin{lstlisting}[language=python]
 t = dataset.transform   # object affine.Affine
@@ -316,7 +349,7 @@ t.e   # pixel size theo Y (thường = -10.0)
 t.f   # Y tọa độ góc trên-trái
 \end{lstlisting}
 
-\section{Pixel size (GSD) là gì?}
+\section{PIXEL SIZE (GSD) LÀ GÌ?}
 
 Pixel size (hay Ground Sampling Distance — GSD) là \textbf{kích thước thực địa của 1 pixel} trên mặt đất.
 
@@ -332,11 +365,11 @@ Pixel size nằm ngay trong ma trận Affine:
     \item \textbf{Chiều Y} $\rightarrow$ lấy giá trị tuyệt đối của \texttt{transform.e} $\rightarrow$ $|t.e| = 10.0$
 \end{itemize}
 
-\begin{quote}
-Dùng \texttt{abs()} vì \texttt{e} âm nhưng kích thước pixel luôn là khoảng cách vật lý (số dương).
-\end{quote}
+\begin{insightbox}{Vì sao dùng \texttt{abs()}?}
+Vì \texttt{e} âm nhưng kích thước pixel luôn là khoảng cách vật lý (số dương).
+\end{insightbox}
 
-\section{Bounding Box là gì?}
+\section{BOUNDING BOX LÀ GÌ?}
 
 Bounding Box (hộp giới hạn) là hình chữ nhật \textbf{nhỏ nhất} bao quanh toàn bộ ảnh, được mô tả bằng 4 tọa độ cực đại thực địa:
 
@@ -396,7 +429,7 @@ Tọa độ hộp giới hạn (Bounding Box) chứa toàn bộ ảnh xoay:
     bottom &= \min(y_1, y_2, y_3, y_4)
 \end{align*}
 
-\section{Ứng dụng nhân ma trận Affine}
+\section{ỨNG DỤNG NHÂN MA TRẬN AFFINE}
 
 Đây là ứng dụng trực tiếp của phép nhân ma trận. Phương trình tổng quát chuyển đổi tọa độ điểm ảnh sang tọa độ thực địa:
 
@@ -425,7 +458,7 @@ Khai triển hệ phương trình (khi ảnh không bị xoay, tức là $b = 0,
     y_{\text{real}} &= e \cdot row + f
 \end{align*}
 
-\section{Tọa độ trả về: Góc pixel hay Tâm pixel?}
+\section{TỌA ĐỘ TRẢ VỀ: GÓC PIXEL HAY TÂM PIXEL?}
 
 Trong quá trình xử lý hệ thống thông tin địa lý (GIS), cần phân biệt rõ 2 quy ước tính toán tọa độ điểm ảnh:
 \begin{itemize}
@@ -433,11 +466,13 @@ Trong quá trình xử lý hệ thống thông tin địa lý (GIS), cần phân
     \item \textbf{Tâm pixel (Center Pixel)}: Tọa độ bị dịch chuyển (offset) thêm một nửa độ lớn của pixel size theo mỗi trục. Ví dụ `(row=0, col=0)` $\rightarrow$ `(560005, 1075115)`.
 \end{itemize}
 
-\textbf{Lưu ý triển khai:} Trong dự án thực tế của báo cáo này, hệ thống đã được can thiệp để implement logic lấy \textbf{tâm pixel} nhằm tăng độ chính xác khi đối chiếu với dữ liệu GPS (tọa độ GPS trên thực địa mặc định được coi là tâm của một vùng không gian).
+\begin{insightbox}{Lưu ý triển khai}
+Trong dự án thực tế của báo cáo này, hệ thống đã được can thiệp để implement logic lấy \textbf{tâm pixel} nhằm tăng độ chính xác khi đối chiếu với dữ liệu GPS (tọa độ GPS trên thực địa mặc định được coi là tâm của một vùng không gian).
+\end{insightbox}
 
-\section{Tổng kết Logic Xử lý \& Checklist}
+\section{TỔNG KẾT LOGIC XỬ LÝ \& CHECKLIST}
 
-\subsection*{Checklist xác thực kiến thức}
+\begin{resultbox}{Checklist xác thực kiến thức}
 \begin{itemize}
     \item[\checkmark] Hiểu rõ \texttt{transform.a} = pixel size theo trục X và \texttt{transform.e} = pixel size theo trục Y (thường là số âm).
     \item[\checkmark] Nắm vững lý do \texttt{e} mang giá trị âm: Trong hệ tọa độ mảng, chỉ số hàng (row) tăng dần từ trên xuống dưới, tương ứng với việc tọa độ Y trên thực địa đang giảm dần (đi về phía Nam).
@@ -445,6 +480,7 @@ Trong quá trình xử lý hệ thống thông tin địa lý (GIS), cần phân
     \item[\checkmark] Tự tính toán được Bounding Box (khung bao giới hạn) từ tập hợp tham số \texttt{c, f, a, e, width, height}.
     \item[\checkmark] Nắm được hành vi mặc định của \texttt{pixel\_to\_coords(0,0)} là trả về tọa độ ở góc trên-trái (top-left).
 \end{itemize}
+\end{resultbox}
 
 \subsection*{Bảng ánh xạ hàm xử lý}
 
@@ -452,7 +488,8 @@ Trong quá trình xử lý hệ thống thông tin địa lý (GIS), cần phân
 \centering
 \begin{tabularx}{\textwidth}{|l|l|X|}
 \hline
-\textbf{Hàm xử lý} & \textbf{Nguồn dữ liệu đầu vào} & \textbf{Công thức / Logic tính toán} \\
+\rowcolor{blue!80!black}
+{\color{white}\textbf{Hàm xử lý}} & {\color{white}\textbf{Nguồn dữ liệu đầu vào}} & {\color{white}\textbf{Công thức / Logic tính toán}} \\
 \hline
 \texttt{get\_pixel\_size()} & \texttt{transform.a}, \texttt{transform.e} & Lấy trị tuyệt đối: \texttt{(abs(a), abs(e))} \\
 \hline
@@ -462,5 +499,153 @@ Trong quá trình xử lý hệ thống thông tin địa lý (GIS), cần phân
 \hline
 \end{tabularx}
 \end{table}
+
+\chapter{KIẾN TRÚC DATA INGESTION \& GIỚI HẠN HỆ THỐNG}
+\noindent\rule{\textwidth}{0.4pt}
+
+\section{PHÂN TÍCH CHI PHÍ I/O: STREAMING VS BATCH DOWNLOAD}
+
+Khi thiết kế tầng thu nạp dữ liệu (Data Ingestion), có hai chiến lược truy cập ảnh vệ tinh lưu trữ dưới dạng Cloud Optimized GeoTIFF (COG):
+
+\begin{itemize}
+    \item \textbf{Level 1 — Batch Download}: Tải toàn bộ file COG về \texttt{data/01\_raw/} qua STAC API, sau đó đọc cục bộ bằng \texttt{read\_chunk()} (windowed reading, xem Chương I).
+    \item \textbf{Level 2 — Cloud-Native Streaming}: Dùng hệ thống file ảo \texttt{/vsicurl/} của GDAL, mỗi lệnh gọi \texttt{read(window=...)} phát sinh một \textbf{HTTP Range Request} độc lập tới server lưu trữ.
+\end{itemize}
+
+\subsection{Mô hình hoá chi phí Streaming}
+
+Với một tile Sentinel-2 kích thước $10980 \times 10980$ pixel, chia thành các chunk vuông cạnh $c = 256$ pixel, số lượng chunk cần đọc để quét hết một band là:
+
+\begin{equation}
+    N_{chunks} = \left\lceil \frac{W}{c} \right\rceil \times \left\lceil \frac{H}{c} \right\rceil = \left\lceil \frac{10980}{256} \right\rceil^2 = 43^2 = 1849
+\end{equation}
+
+Mỗi HTTP Range Request qua \texttt{/vsicurl/} chịu một độ trễ round-trip cố định $t_{lat}$ (độc lập với kích thước dữ liệu tải về, do bản chất TCP handshake + TLS negotiation + HTTP header overhead), ước lượng bảo thủ $t_{lat} \approx 100\text{ms}$. Với chiến lược \textbf{exhaustive full-tile scan} (đọc toàn bộ ảnh, không chỉ một vùng nhỏ), tổng độ trễ mạng tối thiểu là:
+
+\begin{equation}
+    T_{stream} = N_{chunks} \times t_{lat} = 1849 \times 0.1\text{s} \approx 185\text{s}
+\end{equation}
+
+\subsection{So sánh với Local SSD}
+
+Theo tính toán bộ nhớ ở Chương I (Mục ``Quản lý bộ nhớ cơ bản''), một band uint16 kích thước đầy đủ chiếm $S_{band} \approx 230\text{MB}$. Với thông lượng đọc tuần tự bảo thủ của SSD hiện đại $v_{SSD} \approx 500\text{MB/s}$ (thấp hơn nhiều so với NVMe cao cấp $\sim$3500MB/s, chọn giá trị thấp để so sánh công bằng):
+
+\begin{equation}
+    T_{local} = \frac{S_{band}}{v_{SSD}} = \frac{230\text{MB}}{500\text{MB/s}} \approx 0.46\text{s}
+\end{equation}
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|X|c|X|}
+\hline
+\rowcolor{blue!80!black}
+{\color{white}\textbf{Chiến lược}} & {\color{white}\textbf{Thời gian ước lượng}} & {\color{white}\textbf{Bottleneck}} \\
+\hline
+\rowcolor{red!12}
+Streaming (\texttt{/vsicurl/}, 1849 requests) & $\approx 185\text{s}$ & Network round-trip latency \\
+\hline
+\rowcolor{green!12}
+Batch Download + Local Read & $\approx 0.46\text{s}$ (sau khi đã tải) & Disk throughput \\
+\hline
+\end{tabularx}
+\caption{So sánh chi phí I/O giữa hai chiến lược cho một lần exhaustive full-tile scan.}
+\end{table}
+
+\begin{resultbox}{Kết luận thiết kế}
+Chênh lệch xấp xỉ $\mathbf{400\times}$ không đến từ băng thông (bandwidth) mà từ \textbf{độ trễ trên mỗi request} (latency-bound vs throughput-bound). Streaming chỉ tối ưu khi khối lượng dữ liệu thực sự đọc nhỏ hơn khối lượng sẽ phải tải về (truy vấn một AOI nhỏ trong một catalog lớn). Với bài toán giám sát lúa cấp tỉnh — vốn đòi hỏi quét toàn bộ diện tích mỗi tháng — workload là \textit{exhaustive}, nên \textbf{Level 1 (Batch Download) là lựa chọn đúng}, không phải bước đệm tạm thời chờ ``nâng cấp'' lên Level 2.
+\end{resultbox}
+
+\noindent\rule{\textwidth}{0.4pt}
+
+\section{CƠ CHẾ KÍCH HOẠT: PULL VS PUSH}
+
+Bên cạnh chiến lược truy cập dữ liệu, hệ thống ingestion cần một cơ chế kích hoạt (trigger):
+
+\begin{itemize}
+    \item \textbf{Pull}: Hệ thống chủ động truy vấn STAC API theo lịch cố định (cronjob).
+    \item \textbf{Push}: Hệ thống lắng nghe sự kiện thông báo (ví dụ AWS SNS publish khi có scene mới), phản ứng gần như tức thời.
+\end{itemize}
+
+\begin{insightbox}{Nguyên lý lựa chọn}
+Lựa chọn đúng phụ thuộc vào \textbf{hằng số thời gian (time constant)} của hiện tượng vật lý cần quan sát, không phải vào khả năng kỹ thuật sẵn có.
+\end{insightbox}
+
+Chu kỳ sinh trưởng của cây lúa trải qua các giai đoạn sinh lý rõ rệt:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+\rowcolor{blue!80!black}
+{\color{white}\textbf{Giai đoạn sinh trưởng}} & {\color{white}\textbf{Thời gian ($\tau_{physio}$)}} \\
+\hline
+Mạ (Seedling) & $\sim$15--20 ngày \\
+\hline
+Đẻ nhánh (Tillering) & $\sim$25--30 ngày \\
+\hline
+Làm đòng (Booting) & $\sim$25--30 ngày \\
+\hline
+Trổ bông (Flowering) & $\sim$10 ngày \\
+\hline
+Chín (Ripening) & $\sim$30 ngày \\
+\hline
+\end{tabular}
+\caption{Các giai đoạn sinh trưởng của lúa và thời gian đặc trưng.}
+\end{table}
+
+Biến động NDVI có ý nghĩa thống kê chỉ xuất hiện ở quy mô \textbf{tuần}, không phải giờ hay phút. Chu kỳ revisit của vệ tinh Sentinel-2 ($\sim$5 ngày) đã cung cấp độ phân giải thời gian dư thừa so với tốc độ biến đổi sinh lý này. Điều kiện để Push có giá trị thực sự là:
+
+\begin{equation}
+    \tau_{physio} \lesssim \tau_{poll}
+\end{equation}
+
+tức thời gian giữa hai lần poll phải \textit{chậm hơn} tốc độ biến đổi của hiện tượng thì mới bỏ lỡ thông tin. Trong bài toán này, $\tau_{poll} = 1\text{ tháng} \ll \tau_{physio}$ (một chu kỳ sinh trưởng đầy đủ $\sim$3--4 tháng), nên Pull với tần suất hàng tháng là \textbf{dư thừa an toàn}, không thiếu hụt thông tin.
+
+Ngược lại, Push đòi hỏi duy trì một tiến trình lắng nghe thường trực (server standby, subscription tới message broker) — chi phí vận hành liên tục để đổi lấy độ trễ phản ứng thấp hơn nhiều bậc so với mức cần thiết của hiện tượng quan sát.
+
+\begin{resultbox}{Kết luận thiết kế}
+Đầu tư responsiveness vượt quá tốc độ thay đổi của đối tượng được giám sát không tạo thêm giá trị, chỉ tạo thêm chi phí vận hành (over-engineering). \textbf{Kiến trúc Pull (cronjob hàng tháng) được chọn cho hệ thống hiện tại.}
+\end{resultbox}
+
+\noindent\rule{\textwidth}{0.4pt}
+
+\section{GIỚI HẠN CỦA STAC API}
+
+\subsection{Phân tích lỗ hổng}
+
+Đặc tả STAC (SpatioTemporal Asset Catalog) \textbf{không quy định} thứ tự sắp xếp mặc định của kết quả truy vấn — đây là hành vi phụ thuộc vào từng implementation backend cụ thể, không phải một hợp đồng (contract) được đảm bảo. Với tham số \texttt{max\_items=1} kết hợp một \texttt{bbox} giao cắt với nhiều tile UTM lân cận, truy vấn không trả về tập hợp các tile phủ kín \texttt{bbox}, mà chỉ trả về \textbf{một phần tử đơn lẻ theo tiêu chí sort ngầm định} của backend:
+
+\begin{equation}
+    \text{result} = \arg\text{sort}_{\text{criterion}}\Big(\big\{i \in I : \text{footprint}(i) \cap \text{bbox}_{query} \neq \emptyset\big\}\Big)\big[0]
+\end{equation}
+
+trong khi truy vấn \textit{đúng} về mặt phủ không gian đầy đủ phải là hợp toàn bộ tập giao cắt:
+
+\begin{equation}
+    \text{Items}_{correct} = \big\{i \in I : \text{footprint}(i) \cap \text{bbox}_{query} \neq \emptyset\big\}
+\end{equation}
+
+\subsection{Minh chứng thực nghiệm}
+
+Truy vấn trực tiếp Earth Search STAC API v1 với $\texttt{bbox} = [105.0,\ 9.5,\ 106.0,\ 10.5]$ (khu vực Đồng bằng sông Cửu Long) trả về đồng thời hai scene thuộc hai tile UTM khác nhau:
+
+\begin{lstlisting}[language=bash, numbers=none]
+S2B_48PVS_20230115_0_L2A   cloud_cover = 17.07%
+S2B_48PWR_20230115_0_L2A   cloud_cover = 17.94%
+\end{lstlisting}
+
+Với \texttt{max\_items=1}, một trong hai tile này bị loại bỏ khỏi kết quả một cách âm thầm — không phát sinh lỗi (exception), không có cảnh báo. Hệ quả: nếu ranh giới hành chính một tỉnh trải dài qua nhiều tile, phần diện tích nằm ngoài tile được chọn sẽ hoàn toàn vắng mặt trong thống kê, trong khi hệ thống vẫn báo cáo thành công.
+
+\subsection{Known Limitations — Phase 1}
+
+\begin{warningbox}{Giới hạn đã biết của Phase 1}
+\begin{itemize}
+    \item \textcolor{red!60!black}{$\times$} \textbf{Multi-tile Mosaicking chưa được hỗ trợ.} Tầng ingestion hiện tại (\texttt{search\_and\_download}) giả định \texttt{bbox} đầu vào nằm gọn trong một tile UTM duy nhất.
+    \item \textcolor{red!60!black}{$\times$} Chưa xử lý \textbf{CRS harmonization} khi \texttt{bbox} trải qua ranh giới hai UTM zone (ví dụ 48N/49N).
+    \item \textcolor{red!60!black}{$\times$} Chưa có bước \textbf{overlap deduplication} cho vùng chồng lấn giữa các tile liền kề có thời điểm chụp khác nhau.
+\end{itemize}
+\end{warningbox}
+
+Quyết định thiết kế: hoãn (defer) bài toán mosaicking sang một lớp orchestrator riêng, xây dựng \textit{sau} khi lõi tính toán NDVI (Chương tiếp theo) đã ổn định trên đơn vị xử lý cơ bản — một tile. Lý do: mosaicking là bài toán \textbf{spatial geometry} (hợp nhất, khử trùng lặp không gian), tách biệt hoàn toàn về bản chất so với bài toán \textbf{matrix computation} (vector hoá phép tính NDVI trên mảng NumPy) của lõi xử lý. Trộn lẫn hai mối quan tâm này ngay từ đầu sẽ làm tăng độ phức tạp debug khi xảy ra sự cố tràn bộ nhớ (OOM).
 
 \end{document}
