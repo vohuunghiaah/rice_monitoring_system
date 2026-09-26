@@ -51,15 +51,11 @@ class RasterWrapper:
         return x, y
 
     def get_pixel_size(self) -> tuple:
-        return abs(self.transform.a), abs(self.transform.e)
+        return (float(np.hypot(self.transform.a, self.transform.d)),
+                float(np.hypot(self.transform.b, self.transform.e)))
 
     def get_bounds(self) -> dict:
         t = self.transform
-        if abs(t.b) < 1e-9 and abs(t.d) < 1e-9:
-            return {"left": t.c, 
-                    "right": t.c + (self.width*t.a), 
-                    "top": t.f, 
-                    "bottom": t.f + (self.height*t.e)}
         corner = [self._apply_transform(0, 0),
                   self._apply_transform(0, self.width),
                   self._apply_transform(self.height, 0),
@@ -74,11 +70,17 @@ class RasterWrapper:
         }
         return bounds
     def pixel_to_coords(self, row: int, col: int, offset: str = "center") -> tuple:
+        if offset not in ("center", "corner"):
+            raise ValueError("offset must be center or corner")
         col_offset = col + 0.5 if offset == "center" else col
         row_offset = row + 0.5 if offset == "center" else row
         return self._apply_transform(row_offset, col_offset)
     
     def read_chunk(self, band_index: int = 1, chunk_size: int = 256):
+        if not isinstance(chunk_size, int) or chunk_size <= 0:
+            raise ValueError("chunk_size must be a positive integer")
+        if not 1 <= band_index <= self.count:
+            raise ValueError("Invalid band index")
         for row_off in range(0, self.height, chunk_size):
             for col_off in range(0, self.width, chunk_size):
                 actual_width = min(chunk_size, self.width - col_off)
@@ -86,5 +88,4 @@ class RasterWrapper:
                 w = Window(col_off, row_off, actual_width, actual_height)
                 chunk = self.src.read(band_index, window=w)
                 yield(chunk, w, row_off, col_off)
-
 

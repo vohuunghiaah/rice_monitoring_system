@@ -1,5 +1,7 @@
-rasterio
-numpy
-manim
-requests
-pystac_client
+numpy>=1.26,<3
+rasterio>=1.4,<2
+requests>=2.32,<3
+pystac-client>=0.8,<1
+pystac>=1.10,<1.15
+psutil>=5.9,<8
+pyproj>=3.6,<4
