@@ -1,5 +1,27 @@
 # Rice Monitoring System
 
+## Nhánh deep learning change detection (T1/T2)
+
+Đã bổ sung `raster_engine.py` (NumPy window/halo engine), `dataset_bridge.py`
+(generator tensor chia sẻ storage CPU), `vision_core.py` (Siamese U-Net và masked
+Focal + Tversky), cùng reconstruction GeoTIFF, metrics và CLI riêng. Xem
+[báo cáo kiến trúc và hướng dẫn chạy](docs/CHANGE_DETECTION_REPORT.md) và
+[manifest mẫu](docs/change_manifest.example.json).
+
+```powershell
+.venv\Scripts\python -m pip install -r requirements-vision.txt
+.venv\Scripts\python -m src.change_cli --manifest pair.json --checkpoint model.pt --output data/change_mask.tif
+```
+
+Cần checkpoint đã huấn luyện và cặp band/clear-mask cùng grid; chưa có trọng số
+lúa thực địa. Mask xuất ra: 0 không đổi, 1 biến động, 255 unknown. Quality input
+là binary clear mask, không truyền raw SCL. Báo cáo phân biệt phần đã triển khai
+với thiết kế mở rộng SAR và các kiểm chứng production còn thiếu.
+
+Manifest hỗ trợ `quality_radius` để loại vùng giáp mây (đơn vị pixel, mặc định 0).
+Writer kiểm tra đầy đủ core coverage, khóa output trong khi ghi và lưu SHA-256
+manifest/checkpoint trong GeoTIFF. Dữ liệu quality observed phải có giá trị 0/1.
+
 Pipeline Sentinel-2 L2A: STAC → tải B04/B08/SCL → calibration + lọc mây → NDVI theo chunk → mosaic khác CRS → AOI/rice mask → GeoTIFF và thống kê diện tích/coverage.
 
 Để học kiến trúc và cách đọc code, bắt đầu với [Study Guide](docs/STUDY_GUIDE.md). Tài liệu có workflow, khái niệm, deep dive code, ví dụ số và bài tập. [Roadmap](EXECUTION_ROADMAP.md) theo dõi chức năng; [AI Tracker](AI_TRACKER.md) ghi thay đổi và hạn chế.

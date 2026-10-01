@@ -1,0 +1,22 @@
+{
+  "core_size": 256,
+  "halo": 32,
+  "quality_radius": 0,
+  "ndvi": ["B08", "B04"],
+  "t1": {
+    "scene_id": "T1",
+    "bands": [
+      {"name": "B04", "path": "../data/T1/B04.tif", "scale": 0.0001, "offset": 0.0},
+      {"name": "B08", "path": "../data/T1/B08.tif", "scale": 0.0001, "offset": 0.0}
+    ],
+    "quality": "../data/T1/clear_mask.tif"
+  },
+  "t2": {
+    "scene_id": "T2",
+    "bands": [
+      {"name": "B04", "path": "../data/T2/B04.tif", "scale": 0.0001, "offset": 0.0},
+      {"name": "B08", "path": "../data/T2/B08.tif", "scale": 0.0001, "offset": 0.0}
+    ],
+    "quality": "../data/T2/clear_mask.tif"
+  }
+}

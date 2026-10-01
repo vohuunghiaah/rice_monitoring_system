@@ -2,6 +2,42 @@
 
 ## Lịch sử thay đổi
 
+### 2026-10-01 — Chẩn đoán log Colab của dự án ngoài workspace (ProtoEnergy-IDS)
+- Log người dùng cung cấp cho thấy Stage 4 dừng tại `openmax.py:28`, `import libmr`, với `ModuleNotFoundError`; các worker được liệt kê cùng lỗi thiếu dependency.
+- Hướng dẫn cài `libmr==0.1.9` trong runtime Colab và kiểm tra import trước khi chạy lại Stage 4. Chưa truy cập runtime hoặc sửa mã ProtoEnergy-IDS; chưa xác nhận khắc phục thành công.
+
+### 2026-09-28 — Hardening nhánh change detection
+- Loại GDAL Env bị suspend qua yield; kiểm chứng xen kẽ hai iterator và đóng khác thứ tự không làm hỏng môi trường caller.
+- Quality mask observed chỉ chấp nhận 0/1 để ngăn raw SCL bị hiểu nhầm là clear. Thêm quality_radius bằng NumPy integral sums, đọc quality context mở rộng để erosion không phụ thuộc core size.
+- Siết contract buffer/shape/dtype, tên kênh, NDVI pair, calibration float32, finite Affine, model input/output và loss parameters/masks; spectral overflow trả invalid thay vì inf.
+- Writer kiểm tra cả sub_affine/core_affine, scene/channel contract, thứ tự core và coverage hoàn chỉnh; khóa output, bảo vệ input/hardlink và từ chối sidecar cũ.
+- CLI xác minh schema manifest/checkpoint, finite weights/threshold, ngăn ghi đè manifest/checkpoint; GeoTIFF lưu hash SHA-256 manifest/checkpoint và phiên bản PyTorch.
+- Metrics bổ sung precision, recall, threshold và số histogram bins. Đồng bộ README, manifest mẫu và technical report.
+- Kiểm chứng cuối: `.venv/Scripts/python -W error::RuntimeWarning -m unittest discover -s tests -v`: 40/40 pass, không skip, 6,896 s. `git diff --check` không báo whitespace lỗi. Không thay đổi learner self-assessment.
+
+### 2026-09-28 — Pipeline Siamese change detection và technical report
+- Thêm Module 1 `src/raster_engine.py`: NumPy window buffers, calibration in-place, spectral kernel, halo, joint validity và data contract bảo toàn CRS/Affine; từ chối input lệch grid.
+- Thêm `src/dataset_bridge.py`: generator PyTorch batch-one chia sẻ storage NumPy ở CPU, buffer có ownership riêng; không tuyên bố zero-copy khi chuyển GPU.
+- Thêm Module 2 `src/vision_core.py`: shared Siamese encoder, absolute feature differences, decoder nhị phân, masked Focal BCE + Tversky tính float32 từ logits.
+- Thêm orchestration/reconstruction GeoTIFF atomic, class 255 unknown, metrics global IoU và histogram AP, CLI kiểm tra checkpoint/channel order, dependency vision riêng và manifest mẫu.
+- Viết `docs/CHANGE_DETECTION_REPORT.md`: trách nhiệm module, memory/halo/affine, tradeoffs kiến trúc và loss, metric conventions, thiết kế SAR và giới hạn chưa kiểm chứng; cập nhật README.
+- Cài PyTorch 2.14.0+cpu vào `.venv`; `pip check`: không có dependency lỗi. Không sửa các ghi chú tracker đã có của người dùng.
+- `python -m unittest discover -s tests -v`: 32/32 pass (12,710 s), gồm 11 tests mới, không skip. Kiểm tra end-to-end CLI bằng checkpoint synthetic, storage sharing, gradient cực trị, serialization và equivalence tại seam với halo=32.
+- Còn PendingDeprecationWarning từ Affine `*` (cả code hiện có/rasterio); không ảnh hưởng test hiện tại. Chưa benchmark full-scene DL hoặc GPU, chưa huấn luyện/đánh giá lúa thực địa.
+
+### 2026-09-26 — Đánh giá tổng thể project
+- Kiểm tra toàn bộ cấu trúc: src (core/io/viz), pipeline, mosaic, main CLI, scripts, tests, docs, media.
+- Chạy `unittest discover`: 21/21 tests pass (0.9s). Có PendingDeprecationWarning cho Affine `*` operator.
+- Xác nhận tất cả 6 giai đoạn trong EXECUTION_ROADMAP đã hoàn thành phần core.
+- Phần chưa xong thuộc backlog vận hành (HTTP resume, ground truth validation, full S3 download, benchmark tỉnh).
+- Không phát hiện bug blocking hoặc chức năng cốt lõi bị thiếu.
+
+### 2026-09-26 — Push lên GitHub
+- Thêm `image_test/` vào `.gitignore` (chứa file `.tif` ~123MB vượt giới hạn 100MB của GitHub).
+- Commit 34 files changed (3024 insertions, 986 deletions): spatial pipeline, NDVI engine, mosaic, heatmap viz, tests, docs, media videos/images.
+- Xóa 3 file `.tiff` lớn ở root và `CLAUDE.md` khỏi git tracking.
+- Push thành công lên `origin/main` tại `https://github.com/vohuunghiaah/rice_monitoring_system.git`.
+
 ### 2026-09-25 — Mosaic theo vùng, Study Guide và Manim
 - Thêm `src/core/spatial.py`: pixel centers, inverse nearest-neighbor sampling bằng NumPy, block fallback khi vùng nguồn lớn, polygon masking hỗ trợ holes/MultiPolygon.
 - Thêm `src/mosaic.py`: EPSG:6933 equal-area; chuyển CRS qua pyproj, ghép first-valid theo khoảng cách ngày/cloud/ID, loại overlap, source_index và provenance.
@@ -26,6 +62,20 @@
 
 ## Lỗi còn tồn đọng
 
+- [ ] Ngoài workspace — ProtoEnergy-IDS trên Colab: Stage 4 thiếu `libmr`; chờ kiểm chứng cài đặt/import và chạy lại tại runtime người dùng.
+
+- [x] Raw SCL có thể bị coi là quality clear; từ chối giá trị observed ngoài 0/1, regression test pass.
+- [x] GDAL Env của generator không an toàn khi iterator xen kẽ; không giữ Env qua yield, regression test pass.
+- [x] Stream thiếu core hoặc sub_affine sai có thể publish raster không đủ coverage; writer xác minh contract/thứ tự/số core trước publish.
+- [x] CLI có thể ghi đè checkpoint/manifest và nhận width thập phân hoặc tham số vô hạn; đã kiểm tra schema, đường dẫn, finite parameters.
+- [x] Validity số/NaN bị ép thành bool âm thầm và logits vô hạn có thể sigmoid thành xác suất hợp lệ; đã từ chối sai dtype/nonfinite logits.
+- [x] Hai writer cùng output hoặc sidecar cũ có thể làm sai output; thêm exclusive lock và kiểm tra sidecar, failure giữ nguyên file cũ.
+
+- [x] Vòng đời GDAL Env của generator và writer từng đóng sai thứ tự khi stream kết thúc; đã đặt môi trường ngoài bao trọn orchestration, regression reconstruction/CLI pass.
+- [ ] Nhánh DL chưa có checkpoint/ground truth lúa thực địa; không sử dụng kết quả synthetic làm bản đồ biến động thực tế.
+- [x] Thiếu tùy chọn loại vùng giáp mây; đã thêm quality_radius với NumPy erosion, kiểm chứng độc lập kích thước core. Đánh giá bán kính tối ưu thực địa vẫn chưa thực hiện.
+- [ ] Chưa đánh giá chất lượng thực địa vùng giáp mây và lựa chọn quality_radius; mặc định 0 không tự áp dụng erosion.
+
 - [x] Coverage trước đây chưa có vùng AOI ngoài dữ liệu; mosaic hiện giữ toàn AOI và báo missing coverage.
 - [x] Summary trước đây thiếu acquisition date và calibration mặc định thực dùng; đã lưu đầy đủ cho temporal mosaic.
 - [x] Cleanup gặp WinError 5 trên directory OneDrive read-only; retry thuộc tính read-only trong allowlist đã test và chạy thành công.
@@ -42,6 +92,16 @@
 - [ ] Chưa xác nhận tải trọn asset từ S3 trong môi trường hiện tại: live SCL GET chậm và chưa trả chunk sau hơn 3 phút nên dừng smoke test; Range GET 1 KiB trả HTTP 206 thành công. STAC discovery, tests timeout/retry/cache và xử lý dữ liệu local đã pass. Cần kiểm thử lại full download trên mạng ổn định.
 
 ## Đề xuất cải thiện
+
+- [ ] Ngoài workspace — ProtoEnergy-IDS: thêm dependency OpenMax vào cell setup và kiểm tra import trước khi khởi chạy loạt worker để tránh lặp cùng lỗi qua nhiều seed.
+
+- [ ] Bổ sung quy trình vận hành kiểm tra PID và dọn stale output lock sau process crash; không tự xóa lock có thể đang được job khác dùng.
+- [ ] Đóng gói preprocessing/training provenance theo schema version, kiểm tra tương thích calibration policy giữa train và inference; hash manifest/checkpoint hiện phục vụ truy vết, chưa thay thế kiểm chứng ngữ nghĩa.
+
+- [ ] Đánh giá DL theo spatial/seasonal splits, chọn threshold trên validation, lưu calibration/quality policy/data hashes cùng checkpoint; hiện CLI chỉ xác minh architecture/channels/state shapes.
+- [ ] Benchmark peak RSS/throughput full tile và GPU; khóa dependency theo môi trường triển khai, giới hạn worker/prefetch dựa trên memory budget.
+- [ ] Bổ sung multimodal optical/SAR encoders và validity theo modality; nối thêm VV/VH đơn thuần chưa tận dụng được SAR tại vùng optical bị che mây.
+- [ ] Nếu cần phân biệt mất/mở rộng lúa, bổ sung semantic head theo thời điểm hoặc signed temporal features và nhãn phù hợp.
 
 - [x] Mosaic nhiều CRS/UTM zones, temporal priority, overlap deduplication và thống kê diện tích trên equal-area grid; kiểm chứng synthetic tests.
 - [x] Nhận AOI GeoJSON và categorical rice mask để crop/lọc pixel và thống kê diện tích.
